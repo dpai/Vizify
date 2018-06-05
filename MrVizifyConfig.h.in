@@ -1,0 +1,19 @@
+#ifndef MRVIZIFYCONFIG_H
+#define MRVIZIFYCONFIG_H
+
+#define MrVizify_VERSION_MAJOR @MrVizify_VERSION_MAJOR@
+#define MrVizify_VERSION_MINOR @MrVizify_VERSION_MINOR@
+
+#cmakedefine USE_ITKDCMTK
+
+#cmakedefine USE_CIMGPROC
+
+#cmakedefine USE_CIMGCONV
+
+#cmakedefine USE_CIMGSTAT
+
+#cmakedefine USE_MERGE
+
+#define USE_DICOM @DICOM_LIB@
+
+#endif // MRVIZIFYCONFIG_H

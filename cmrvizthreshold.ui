@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CMrVizThreshold</class>
+ <widget class="QWidget" name="CMrVizThreshold">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>852</width>
+    <height>565</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="hLayout_Images">
+     <item>
+      <layout class="QHBoxLayout" name="hLayout_InputImg" stretch="0,1">
+       <item>
+        <widget class="QLabel" name="qLabel_InputImg">
+         <property name="text">
+          <string>Input Image</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="cBox_InputImg"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="hLayout_OutputImg" stretch="0,1">
+       <item>
+        <widget class="QLabel" name="qLabel_OutputImg">
+         <property name="text">
+          <string>Output Image</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="cBox_OutputImg">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <layout class="QHBoxLayout" name="hLayout_Controls">
+     <item>
+      <layout class="QHBoxLayout" name="hLayout_ThresholdAlg" stretch="0,1">
+       <item>
+        <widget class="QLabel" name="qLabel_ThreshAlg">
+         <property name="text">
+          <string>Threshold Algorithm</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="cBox_ThreshAlg"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="hLayout_ThreshLevels">
+       <item>
+        <widget class="QLabel" name="qLabel_ThreshLevels">
+         <property name="text">
+          <string>Number of Threshold Levels</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lEdit_Threshlevels">
+         <property name="maxLength">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pBtn_Apply">
+         <property name="text">
+          <string>Apply</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0">
+    <layout class="QHBoxLayout" name="hLayout_Widgets">
+     <item>
+      <widget class="QVTKWidget" name="qWidget_InputView" native="true"/>
+     </item>
+     <item>
+      <widget class="QVTKWidget" name="qWidget_OutputView" native="true"/>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QVTKWidget</class>
+   <extends>QWidget</extends>
+   <header>QVTKWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+ <slots>
+  <slot>UpdateInputImage(int)</slot>
+ </slots>
+</ui>
