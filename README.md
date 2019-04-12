@@ -40,5 +40,25 @@ REM Uncomment the below line when using a git checkout of the source repository
 
 REM SET PATH=%_ROOT%\qtrepotools\bin;%PATH%&
 
-SET _ROOT=&
+SET _ROOT=
 
+Also set the Python path in the prompt. The Python version to used is Python 2.7
+
+Set the path to python - Make sure it is a python 2 distribution
+
+### Make a build directory
+	mkdir qtbin
+	cd qtbin
+	
+### Use the following configure command
+	..\qt-everywhere-opensource-src-5.9.1\configure -debug -nomake examples -opensource -skip qtwebengine -opengl dynamic -prefix .
+	
+### Build the source
+	nmake
+	nmake install
+	
+### Set environment variables
+
+QT_QPA_PLATFORM_PLUGIN_PATH C:\Installations\qt-everywhere-opensource-src-5.9.1\QTBin\plugins\platforms
+
+PATH  C:\Installations\qt-everywhere-opensource-src-5.9.1\QTBin\bin
