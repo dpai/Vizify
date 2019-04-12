@@ -46,8 +46,6 @@ Set the enviroment variables like shown below:
 
 Also set the Python path in the prompt. The Python version to used is Python 2.7
 
-Set the path to python - Make sure it is a python 2 distribution
-
 ### Make a build directory
 	mkdir qtbin
 	cd qtbin
