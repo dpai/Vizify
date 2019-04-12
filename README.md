@@ -28,7 +28,7 @@ Qt - works with 4 as well as 5
 
 ## Building Qt (Windows).
 
-Download the latest Qt from the online repository.
+Download the latest Qt from the online repository. The instructions are for Qt version 5.9.1. It is possible later versions differ in setup.
 
 Also install the Visual Studio 2017 Express version which can be downloaded for free from the Microsoft website.
 
@@ -70,3 +70,19 @@ Set the path to python - Make sure it is a python 2 distribution
 QT_QPA_PLATFORM_PLUGIN_PATH C:\Installations\qt-everywhere-opensource-src-5.9.1\QTBin\plugins\platforms
 
 PATH  C:\Installations\qt-everywhere-opensource-src-5.9.1\QTBin\bin
+
+## Install VTK
+
+Download the latest VTK (I have tried compiling with version 8) and run the CMake.
+
+Enable Qt VTK GUI module. I have seen every new version has a different switch string for this. Just look for anything that says Enable the Qt GUI for VTK. This is important or Qt won't work with VTK. VTK build generates a Qt widget for use with the Qt Designer.
+
+Note: If you want to use VTK within Python, build it in shared library mode and enable Python wrapping.
+
+## Install ITK
+Download the lastest version from the ITK website. I have used ITK 4.11 for this application.
+Use Cmake to build and install. 
+
+Note: Make sure that the ITKVTKGlue module is enabled. 
+
+Specify the library paths for VTK and Qt, and build.
