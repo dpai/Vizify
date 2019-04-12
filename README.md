@@ -36,19 +36,13 @@ After install, open the Native VS Tools prompt for either x86 or x64 as you pref
 
 Set the enviroment variables like shown below:
 
-REM Set up \Microsoft Visual Studio 2013, where <arch> is \c amd64, \c x86, etc.
-  
-CALL "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" <arch>
-  
-SET _ROOT=C:\qt\qt-5
-
-SET PATH=%_ROOT%\qtbase\bin;%_ROOT%\gnuwin32\bin;%PATH%
-
-REM Uncomment the below line when using a git checkout of the source repository
-
-REM SET PATH=%_ROOT%\qtrepotools\bin;%PATH%&
-
-SET _ROOT=
+	REM Set up \Microsoft Visual Studio 2013, where <arch> is \c amd64, \c x86, etc.
+	CALL "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" <arch>
+	SET _ROOT=C:\qt\qt-5
+	SET PATH=%_ROOT%\qtbase\bin;%_ROOT%\gnuwin32\bin;%PATH%
+	REM Uncomment the below line when using a git checkout of the source repository
+	REM SET PATH=%_ROOT%\qtrepotools\bin;%PATH%&
+	SET _ROOT=
 
 Also set the Python path in the prompt. The Python version to used is Python 2.7
 
@@ -67,9 +61,8 @@ Set the path to python - Make sure it is a python 2 distribution
 	
 ### Set environment variables
 
-QT_QPA_PLATFORM_PLUGIN_PATH C:\Installations\qt-everywhere-opensource-src-5.9.1\QTBin\plugins\platforms
-
-PATH  C:\Installations\qt-everywhere-opensource-src-5.9.1\QTBin\bin
+	QT_QPA_PLATFORM_PLUGIN_PATH C:\Installations\qt-everywhere-opensource-src-5.9.1\QTBin\plugins\platforms
+	PATH  C:\Installations\qt-everywhere-opensource-src-5.9.1\QTBin\bin
 
 ## Install VTK
 
