@@ -77,3 +77,9 @@ Use Cmake to build and install.
 Note: Make sure that the ITKVTKGlue module is enabled. 
 
 Specify the library paths for VTK and Qt, and build.
+
+## References
+
+Qt is a GUI framework for use in both Windows and Linux (www.qt.io)
+VTK, also called Visualization Toolkit is a library for 3D visualization (www.vtk.org)
+ITK is an image processing library and is optimized for medical image processing, registration and segmentation (www.itk.org)
