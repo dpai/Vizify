@@ -28,11 +28,17 @@ After install, open the Native VS Tools prompt for either x86 or x64 as you pref
 
 Set the enviroment variables like shown below:
 
-REM Set up \Microsoft Visual Studio 2013, where <arch> is \c amd64, \c x86, etc.&nbsp;
-CALL "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" <arch>&nbsp;
-SET _ROOT=C:\qt\qt-5&nbsp;
-SET PATH=%_ROOT%\qtbase\bin;%_ROOT%\gnuwin32\bin;%PATH%&nbsp;
-REM Uncomment the below line when using a git checkout of the source repository&nbsp;
-REM SET PATH=%_ROOT%\qtrepotools\bin;%PATH%&nbsp;
-SET _ROOT=&nbsp;
+REM Set up \Microsoft Visual Studio 2013, where <arch> is \c amd64, \c x86, etc.
+  
+CALL "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" <arch>
+  
+SET _ROOT=C:\qt\qt-5
+
+SET PATH=%_ROOT%\qtbase\bin;%_ROOT%\gnuwin32\bin;%PATH%
+
+REM Uncomment the below line when using a git checkout of the source repository
+
+REM SET PATH=%_ROOT%\qtrepotools\bin;%PATH%&
+
+SET _ROOT=&
 
