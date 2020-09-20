@@ -51,7 +51,8 @@ Also set the Python path in the prompt. The Python version to used is Python 2.7
 	cd qtbin
 	
 ### Use the following configure command
-	..\qt-everywhere-opensource-src-5.9.1\configure -debug -nomake examples -opensource -skip qtwebengine -opengl dynamic -prefix .
+	[Windows]..\qt-everywhere-opensource-src-5.9.1\configure -debug -nomake examples -opensource -skip qtwebengine -opengl dynamic -prefix .
+	[Linux]../qt5/configure -debug -nomake examples -nomake tests -opensource -skip qtwebengine -opengl desktop -prefix /opt/Qt5.15/debug -c++std c++17 -xcb
 	
 ### Build the source
 	nmake
