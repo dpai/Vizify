@@ -4,8 +4,7 @@
 /** Qt Includes **/
 
 /** VTK Includes **/
-#include <QVTKWidget.h>
-#include <QVTKWidget.h>
+#include <QVTKOpenGLNativeWidget.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
@@ -41,9 +40,9 @@
 
 class vtkImageInteractionCallback;
 
-/** CVTKWidget: A VTK Widget for Viewing . THe class decorates the QVTKWidget class defined in the UI **/
+/** CVTKWidget: A VTK Widget for Viewing . THe class decorates the QVTKOpenGLNativeWidget class defined in the UI **/
 
-class CVTKWidget : public QVTKWidget
+class CVTKWidget : public QVTKOpenGLNativeWidget
 {
     Q_OBJECT
 private:
@@ -55,7 +54,7 @@ private:
 
 /** Data **/
 private:
-    QVTKWidget                                          *m_vtkWidget;
+    QVTKOpenGLNativeWidget                              *m_vtkWidget;
 
     // VTK Specific
     vtkSmartPointer<vtkRenderer>                         m_MPRRenderer;
@@ -93,7 +92,7 @@ public:
         return new CVTKWidget();
     }
 
-    void SetVTKWidget(QVTKWidget *pWidget);
+    void SetVTKWidget(QVTKOpenGLNativeWidget *pWidget);
 
     void Render();
 
@@ -127,7 +126,7 @@ public slots:
 
 };
 
-/** vtkImageInteractionCallback - Class defined for handling intereactions in QVTKWidget **/
+/** vtkImageInteractionCallback - Class defined for handling intereactions in QVTKOpenGLNativeWidget **/
 
 class vtkImageInteractionCallback : public vtkCommand
 {

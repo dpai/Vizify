@@ -188,24 +188,24 @@ void CITKDicom::OpenDicomDir(std::string strdir)
 
 InputImage4DType::Pointer CITKDicom::GetImage4D()
 {
-    return (m_DicomLoaded)?m_DicomImage4D:NULL;
+    return (m_DicomLoaded)?m_DicomImage4D:nullptr;
 }
 
 InputImageType::Pointer CITKDicom::GetImage3D(int iIndex)
 {
 	/** CCheck if Data is loaded **/
 	if (!m_DicomLoaded)
-		return NULL;
+		return nullptr;
 
 	/** Check if 3D data requested is valid **/
 	if (iIndex > Get4thDimension())
-		return NULL;
+		return nullptr;
 
 	/** Extract 3D data **/
 	if (ExtractVolumefrom4D(iIndex))
 		return m_DicomImage3D;
 	else
-		return NULL;
+		return nullptr;
 }
 
 bool CITKDicom::ExtractVolumefrom4D(unsigned int iIndex)

@@ -205,7 +205,7 @@ InputImageType::Pointer CITK::GetImage(const QString &key) const
     {
         std::cerr << "Error--> (" << __FILE__ << ":" << __LINE__ << ")" << std::endl;
         std::cerr << "ListModel Not Set: Please use SetImageListModel() " << std::endl;
-        return NULL;
+        return nullptr;
     }
 
 	return m_ImageListMap[key];

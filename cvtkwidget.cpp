@@ -31,7 +31,7 @@ static double    sagittalElements[16] =
 #endif
 
 CVTKWidget::CVTKWidget(QWidget *parent) :
-    QVTKWidget(parent)
+    QVTKOpenGLNativeWidget(parent)
 {
     /*
      * VTK Setup
@@ -62,11 +62,11 @@ CVTKWidget::CVTKWidget(QWidget *parent) :
     win->SetInstance(win);
 }
 
-void CVTKWidget::SetVTKWidget(QVTKWidget *pWidget)
+void CVTKWidget::SetVTKWidget(QVTKOpenGLNativeWidget *pWidget)
 {
     m_vtkWidget = pWidget;
-    m_vtkWidget->GetRenderWindow()->AddRenderer(m_MPRRenderer);
-    m_MPRRenderInteractor  = m_vtkWidget->GetInteractor();
+    m_vtkWidget->renderWindow()->AddRenderer(m_MPRRenderer);
+    m_MPRRenderInteractor  = m_vtkWidget->interactor();
     m_MPRRenderInteractor->SetInteractorStyle(m_RenderStyle);
 
     vtkCamera *acamera = m_MPRRenderer->GetActiveCamera();

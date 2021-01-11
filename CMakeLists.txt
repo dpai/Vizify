@@ -15,10 +15,11 @@ configure_file (
 
  
 find_package(ITK REQUIRED)
+message("This variale is "  ${ITK_USE_FILE})
 include(${ITK_USE_FILE})
+message("ITK Includes " ${ITK_INCLUDE_DIRS})
 if (ITKVtkGlue_LOADED)
   find_package(VTK REQUIRED)
-  include(${VTK_USE_FILE})
 else()
   find_package(ItkVtkGlue REQUIRED)
   include(${ItkVtkGlue_USE_FILE})
@@ -28,8 +29,8 @@ endif()
 set (QT_LIB_VERSION "5" CACHE PATH "Specify Qt version")
 
 if (QT_LIB_VERSION VERSION_GREATER "4")
-  find_package(QT5 REQUIRED)
-  include_directories(${QT_INCLUDE_DIRS})
+  find_package(Qt5 REQUIRED COMPONENTS Core)
+  include_directories(${Qt_INCLUDE_DIRS})
   include_directories(${Qt5Core_INCLUDE_DIRS})
 else()
   find_package(Qt4 REQUIRED)

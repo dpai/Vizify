@@ -4,7 +4,7 @@
 #include "cvtkwidget.h"
 #include "cmrvizthreshold.h"
 #include "MrVizifyConfig.h"
-#include "compareimageui.h"
+//#include "compareimageui.h"
 
 #ifdef USE_CIMGPROC
 #include "CImgProcWidget.h"
@@ -206,11 +206,11 @@ void MrVizifyMain::on_pushButton_2_clicked()
 
 void MrVizifyMain::on_pushButton_3_clicked()
 {
-	CompareImageUI *cImageCompare = new CompareImageUI(this);
-	cImageCompare->setWindowFlags(Qt::Window);
+	// CompareImageUI *cImageCompare = new CompareImageUI(this);
+	// cImageCompare->setWindowFlags(Qt::Window);
 
-	cImageCompare->Init();
-	cImageCompare->show();
+	// cImageCompare->Init();
+	// cImageCompare->show();
 }
 
 void MrVizifyMain::on_pushButton_4_clicked()

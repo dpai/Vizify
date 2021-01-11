@@ -168,7 +168,7 @@ InputImage4DType::Pointer CFileLoader::InternalImageReader(const char * cFileNam
 		std::cerr << "Error--> (" << __FILE__ << ":" << __LINE__ << ")" << std::endl;
 		std::cerr << "Error reading file " << excp << std::endl;
 		m_FileLoaded = false;
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -200,11 +200,11 @@ InputImageType::Pointer CFileLoader::GetImage3D(unsigned int iID)
 {
 	/** Check if File Loaded **/
 	if (!m_FileLoaded)
-		return NULL;
+		return nullptr;
 
 	/** Check if requested 3D data is valid**/
 	if (iID > Get4thDimension())
-		return NULL;
+		return nullptr;
 
 	/** Extract the 3D data **/
 	typedef itk::ExtractImageFilter< InputImage4DType, InputImageType > ExtractImageFilterType;
