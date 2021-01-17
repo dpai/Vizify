@@ -281,7 +281,7 @@ void CVTKWidget::Render()
         return;
     }
 
-    if (m_ImageData == NULL)
+    if (m_ImageData == nullptr)
     {
         std::cerr << "Error--> (" << __FILE__ << ":" << __LINE__ << ")" << std::endl;
         std::cerr << "No Input Image to visualize " << std::endl;
@@ -331,10 +331,10 @@ void CVTKWidget::CleanPipeline()
     /** Cleanup all actors - Convenience  Function **/
     m_MPRRenderer->RemoveAllViewProps();
     m_MPRRenderInteractor->Render();
-    m_ImageData = NULL;
-    m_ImageActor = NULL;
-    m_ImageReslice = NULL;
-    m_Lut = NULL;
+    m_ImageData = nullptr;
+    m_ImageActor = nullptr;
+    m_ImageReslice = nullptr;
+    m_Lut = nullptr;
 }
 
 void CVTKWidget::SetOverLay(vtkImageData *cImage)
@@ -446,7 +446,7 @@ double* CVTKWidget::GetPixelValueAtLocation(double pX, double pY, double pZ, vtk
     if (Interpolate)
     {
 
-        vtkCell* cell = cImageData->FindAndGetCell(pos, NULL, -1, tol2, subId, pcoords, weights );
+        vtkCell* cell = cImageData->FindAndGetCell(pos, nullptr, -1, tol2, subId, pcoords, weights );
 
         if( cell )
         {

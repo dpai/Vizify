@@ -175,8 +175,8 @@ InputImage4DType::Pointer CFileLoader::InternalImageReader(const char * cFileNam
 void CFileLoader::Clean()
 {
 	m_FileLoaded = false;
-	m_FileImage3D = NULL;
-	m_FileImage4D = NULL;
+	m_FileImage3D = nullptr;
+	m_FileImage4D = nullptr;
 	m_FileDir.clear();
 	m_FileName.clear();
 }
@@ -242,7 +242,7 @@ InputImageType::Pointer CFileLoader::GetImage3D(unsigned int iID)
 		/** if 4D or 3D data is not valid **/
 		std::cerr << "Error--> (" << __FILE__ << ":" << __LINE__ << ")" << std::endl;
 		std::cerr << "No 4D Volume Found or 3D data not valid " << excp << std::endl;
-		m_FileImage3D = NULL;
+		m_FileImage3D = nullptr;
 	}
 
 	return m_FileImage3D;

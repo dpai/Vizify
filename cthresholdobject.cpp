@@ -11,7 +11,7 @@ CThresholdObject::~CThresholdObject()
 
 void CThresholdObject::SetOutput( ThresholdImageType::Pointer cImage)
 {
-	m_OutputImage = NULL;
+	m_OutputImage = nullptr;
 	/** Convert Threshold Image Type to Output Image Type **/
 
 	typedef itk::CastImageFilter< ThresholdImageType, OutputImageType > CastFilterType;
@@ -36,7 +36,7 @@ void CThresholdObject::SetOutput( ThresholdImageType::Pointer cImage)
 
 void CThresholdObject::SetRGBOutput (ThresholdImageType::Pointer cImage)
 {
-	m_RGBOutputImage = NULL;
+	m_RGBOutputImage = nullptr;
 	/** Map ThresholdLabels to distinct RGB Colors **/
     typedef itk::LabelToRGBImageFilter< ThresholdImageType, RGBImageType > LabelRGBFilterType;
     LabelRGBFilterType::Pointer colormapImageFilter = LabelRGBFilterType::New();

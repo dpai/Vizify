@@ -69,9 +69,9 @@ void CITK::Init()
 
 	m_4thDimension = 0;
 
-	m_Input3DImage = NULL;
+	m_Input3DImage = nullptr;
 
-	m_Input4DImage = NULL;
+	m_Input4DImage = nullptr;
 
 	m_XYImageOrientation[0] = m_XYImageOrientation[1] = 1;
 

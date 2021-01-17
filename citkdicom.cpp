@@ -22,9 +22,9 @@ std::string CITKDicom::GetDescription()
 void CITKDicom::Clean()
 {
 	m_DicomLoaded = false;
-	m_DicomImage4D = NULL;
+	m_DicomImage4D = nullptr;
 	m_DicomDir.clear();
-	m_dicomReader = NULL;
+	m_dicomReader = nullptr;
 }
 
 void CITKDicom::OpenDicomDir(std::string strdir)
