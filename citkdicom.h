@@ -1,5 +1,4 @@
-#ifndef CITKDICOM_H
-#define CITKDICOM_H
+#pragma once
 
 #include "cdicom.h"
 
@@ -20,13 +19,13 @@ class CITKDicom : public CDicom
 
 /** Typedefs **/
 private:
-    typedef itk::ImageSeriesReader< InputImage4DType >          SeriesReaderType;
+    using SeriesReaderType = itk::ImageSeriesReader< InputImage4DType >;
 
-    typedef itk::GDCMImageIO                                    GDCMImageIOType;
+    using GDCMImageIOType = itk::GDCMImageIO;
 
-    typedef itk::GDCMSeriesFileNames                            InputNamesGeneratorType;
+    using InputNamesGeneratorType = itk::GDCMSeriesFileNames;
 
-	typedef itk::Image< PixelDataType, 2 >              Input2DImageType;
+	using Input2DImageType =  itk::Image< PixelDataType, 2>;
 
 /** Data **/
 private:
@@ -34,7 +33,7 @@ private:
 
 	InputImageType::Pointer										m_DicomImage3D;
 
-	Input2DImageType::Pointer										m_DicomImage2D;
+	Input2DImageType::Pointer								    m_DicomImage2D;
 
     std::string                                                 m_DicomDir;
 
@@ -45,11 +44,11 @@ private:
 /** Constructors and Destructors **/
 private:
     CITKDicom();
-    CITKDicom(const CITKDicom& rhs);
-    CITKDicom& operator =(const CITKDicom& rhs);
 
 public:
-    ~CITKDicom();
+    ~CITKDicom() = default;
+    CITKDicom(const CITKDicom& rhs) = delete;
+    CITKDicom& operator =(const CITKDicom& rhs) = delete;
 
 /** Function Members **/
 public:
@@ -57,26 +56,24 @@ public:
             return new CITKDicom();
         }
 
-    void OpenDicomDir(std::string );
+    void OpenDicomDir(std::string ) final;
 
-    InputImage4DType::Pointer GetImage4D();
+    InputImage4DType::Pointer GetImage4D() final;
 
-	InputImageType::Pointer  GetImage3D(int);
+	InputImageType::Pointer  GetImage3D(int) final;
 
-    bool isDicomLoaded();
+    bool isDicomLoaded() final;
 
-    std::string GetDicomDir();
+    std::string& GetDicomDir() final;
 
-    std::string GetDescription();
+    std::string GetDescription() final;
 
-	void Clean();
+	void Clean() final;
 
-	unsigned int Get4thDimension();
+	unsigned int Get4thDimension() final;
 
 private:
 	bool ExtractVolumefrom4D(unsigned int iIndex);
 	bool ExtractVolumefrom3D(unsigned int iIndex);
 
 };
-
-#endif // CITKDICOM_H

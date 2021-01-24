@@ -1,13 +1,12 @@
-#ifndef CDICOM_H
-#define CDICOM_H
+#pragma once
 
 /** C++ Inlcudes **/
 #include <string>
 #include <map>
 #include "dataobjects.h"
 
+/** Qt Includes **/
 #include <QString>
-
 
 /** ITK Includes **/
 
@@ -16,16 +15,16 @@
 class CDicom
 {
 protected:
-    CDicom();
+    CDicom() = default;
     CDicom(const CDicom& rhs);
     CDicom& operator =(const CDicom& rhs);
 
 public:
-    virtual ~CDicom();
+    virtual ~CDicom() = default;
     virtual void OpenDicomDir(std::string ) = 0;
     virtual InputImage4DType::Pointer GetImage4D() = 0;
     virtual bool isDicomLoaded() = 0;
-    virtual std::string GetDicomDir() = 0;
+    virtual std::string& GetDicomDir() = 0;
     virtual std::string GetDescription() = 0;
 	virtual unsigned int Get4thDimension() = 0;
 	virtual void Clean() = 0;
@@ -41,5 +40,3 @@ public:
 		dir[0] = dir[1] = 1;
 	}
 };
-
-#endif // CDICOM_H

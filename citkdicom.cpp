@@ -10,13 +10,10 @@ CITKDicom::CITKDicom()
     m_DicomLoaded = false;
 }
 
-CITKDicom::~CITKDicom()
-{
-}
-
 std::string CITKDicom::GetDescription()
 {
-    return std::string("Using ITK Dicom");
+	static auto desc = std::string("ITK DICOM: GDCM");
+    return desc;
 }
 
 void CITKDicom::Clean()
@@ -80,15 +77,15 @@ void CITKDicom::OpenDicomDir(std::string strdir)
 		std::string value;
 		std::string label;
 
-		while (itr != end)
-		{
-			label = itr->first;
-			value = dynamic_cast<itk::MetaDataObject<std::string> *>(itr->second.GetPointer())->GetMetaDataObjectValue();
+		// while (itr != end)
+		// {
+		// 	label = itr->first;
+		// 	value = dynamic_cast<itk::MetaDataObject<std::string> *>(itr->second.GetPointer())->GetMetaDataObjectValue();
 
-			//std::cout << " Element " << label << " has value " << value << std::endl;
+		// 	//std::cout << " Element " << label << " has value " << value << std::endl;
 
-			itr++;
-		}
+		// 	itr++;
+		// }
 
 		std::string entryId = "0020|0013";
 		itr = fileDict->Find( entryId );
@@ -298,7 +295,7 @@ bool CITKDicom::isDicomLoaded()
     return m_DicomLoaded;
 }
 
-std::string CITKDicom::GetDicomDir()
+std::string& CITKDicom::GetDicomDir()
 {
     return m_DicomDir;
 }

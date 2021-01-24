@@ -1,5 +1,4 @@
-#ifndef DATAOBJECTS_H
-#define DATAOBJECTS_H
+#pragma once
 
 #include <itkImage.h>
 #include <itkImageRegionIterator.h>
@@ -7,27 +6,27 @@
 #include <itkImageIOBase.h>
 
 /** Global Initializations **/
-const unsigned int InputDimension = 3;
+constexpr unsigned int InputDimension = 3;
 
-const unsigned int OutputDimension = 3;
+constexpr unsigned int OutputDimension = 3;
 
-const unsigned int Input4DDimension = 4;
+constexpr unsigned int Input4DDimension = 4;
 
-typedef itk::RGBPixel<unsigned char>                             RGBPixelType;
+using RGBPixelType = itk::RGBPixel<unsigned char>;
 
-typedef signed short                                             PixelDataType;
+using PixelDataType = signed short;
 
-typedef itk::Image< PixelDataType, InputDimension >              InputImageType;
+using InputImageType = itk::Image<PixelDataType, InputDimension>;
 
-typedef itk::Image< PixelDataType, OutputDimension >             OutputImageType;
+using OutputImageType = itk::Image<PixelDataType, OutputDimension>;
 
-typedef itk::Image< RGBPixelType, InputDimension >               RGBImageType;
+using RGBImageType =  itk::Image<RGBPixelType, InputDimension>;
 
-typedef itk::Image< PixelDataType, Input4DDimension >            InputImage4DType;
+using InputImage4DType = itk::Image<PixelDataType, Input4DDimension>;
 
-typedef itk::ImageRegionIterator<InputImageType>				 RegionIterator3D;
+using RegionIterator3D =  itk::ImageRegionIterator<InputImageType>;
 
-typedef itk::ImageIOBase::IOComponentType						 InternalPixelDataType;
+using InternalPixelDataType = itk::ImageIOBase::IOComponentType;
 
 enum {
 	FINAL_OUTPUT_IMAGE = 8, FINAL_OUTPUT_WITH_OVERLAY, INTERMEDIATE_OUTPUT_0, INTERMEDIATE_OUTPUT_1, INTERMEDIATE_OUTPUT_2, INTERMEDIATE_OUTPUT_3, INTERMEDIATE_OUTPUT_4, INTERMEDIATE_OUTPUT_5 
@@ -44,5 +43,3 @@ extern void MakeSquareImage(InputImageType::Pointer cImage1, unsigned int iDims,
 extern void MakeGaussImage(InputImageType::Pointer cImage2, double variance);
 
 extern void MakeLineImage(InputImageType::Pointer cImage1, unsigned int iDims);
-
-#endif // DATAOBJECTS_H
