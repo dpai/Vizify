@@ -85,10 +85,14 @@ if (USE_CIMGSTAT)
     set(EXTRA_LIBS ${EXTRA_LIBS} MrImgStats)
 endif(USE_CIMGSTAT)
 
-file(GLOB UI_FILES *.ui)
-file(GLOB QT_WRAP *.h)
-file(GLOB CXX_FILES *.cpp)
-file(GLOB CC_FILES *.cc)
+set(UI_FILES
+    mrvizifymain.ui
+    cmrvizthreshold.ui)
+
+set(QT_WRAP 
+    mrvizifymain.h
+    cmrvizthreshold.h
+    cvtkwidget.h)
 
 if (QT_LIB_VERSION VERSION_GREATER "4")
   QT5_WRAP_UI(UISrcs ${UI_FILES})
@@ -98,10 +102,29 @@ else()
   QT4_WRAP_CPP(MOCSrcs ${QT_WRAP})
 endif()
 
-add_executable(MrVizify MACOSX_BUNDLE ${CXX_FILES} ${CC_FILES} ${UISrcs} ${MOCSrcs} ${QT_WRAP})
+set(HEADER_FILES
+    cfileloader.h
+    cdicom.h
+    citkdicom.h
+    citk.h
+    cthresholdfactory.h
+    cthresholdobject.h
+    dataobjects.h
+    thresholdobjects.h)
 
+set(SOURCE_FILES
+    cfileloader.cpp
+    citk.cpp
+    citkdicom.cpp
+    cthresholdfactory.cpp
+    cthresholdobject.cpp
+    cvtkwidget.cpp
+    mrvizifymain.cpp
+    cmrvizthreshold.cpp
+    main.cpp)
 
- 
+add_executable(MrVizify MACOSX_BUNDLE ${SOURCE_FILES} ${HEADER_FILES} ${UISrcs} ${MOCSrcs} ${QT_WRAP})
+
 if( "${ITK_VERSION_MAJOR}" LESS 4 )
   target_link_libraries(MrVizify ITKReview ${ITK_LIBRARIES} ${VTK_LIBRARIES} ${EXTRA_LIBS} )
 else( "${ITK_VERSION_MAJOR}" LESS 4 )
