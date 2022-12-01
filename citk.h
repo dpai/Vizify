@@ -4,6 +4,8 @@
 #include <cdicom.h>
 #include <cfileloader.h>
 
+#include <memory>
+
 /** ITK Includes **/
 #include "itkImageToVTKImageFilter.h"
 #include "itkFlipImageFilter.h"
@@ -27,9 +29,9 @@ class CITK
 
 /** Data Members **/
 private:
-    CDicom                                   *m_DICOM;
+    std::unique_ptr<CDicom>                   m_DICOM;
 
-	CFileLoader								 *m_FileLoader;
+	std::unique_ptr<CFileLoader>              m_FileLoader;
 
     QString                                   m_ImagePath;
 
@@ -62,16 +64,16 @@ private:
 /** Constructors and Destructors **/
 private:
     CITK();
-    CITK(const CITK& rhs);
-    CITK& operator =(const CITK& rhs);
 
- private:
+ public:
     ~CITK();
+	CITK(const CITK& rhs) = delete;
+    CITK& operator =(const CITK& rhs) = delete;
 
 /** Function Members **/
  public:
     static CITK* CreateNew() {
-        if (m_CITKinstance == 0)
+        if (m_CITKinstance == nullptr)
             m_CITKinstance = new CITK();
         return m_CITKinstance;
     }

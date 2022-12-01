@@ -31,7 +31,7 @@ MrVizifyMain::MrVizifyMain(QWidget *parent) :
     ui->setupUi(this);
 
     // Composition Initializations
-    m_itk = CITK::CreateNew();
+    m_itk = std::unique_ptr<CITK>(CITK::CreateNew());
     m_vtkwidget = CVTKWidget::CreateNew();
 
 	m_vtkwidget->SetVTKWidget(ui->wGet_ViewWindow);
@@ -66,16 +66,13 @@ MrVizifyMain::MrVizifyMain(QWidget *parent) :
 MrVizifyMain::~MrVizifyMain()
 {
     delete ui;
-    //delete m_itk;
 	delete m_vtkwidget;
-	delete m_ThresholdWidget;
 }
 
 void MrVizifyMain::LinkInputModels(QAbstractItemModel *model)
 {
 	m_itk->SetImageListModel(model);
-
-	m_ThresholdWidget = new CMrVizThreshold(model, this);
+	m_ThresholdWidget = std::make_unique<CMrVizThreshold>(model, this);
 	m_ThresholdWidget->setWindowFlags(Qt::Window);
 }
 

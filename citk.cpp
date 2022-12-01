@@ -17,7 +17,7 @@
 #endif
 
 /** Static Declaration **/
-CITK *CITK::m_CITKinstance = 0;
+CITK *CITK::m_CITKinstance = nullptr;
 
 /** template Initializations **/
 template int CITK::AddImageToList<OutputImageType>(QString, OutputImageType::Pointer);
@@ -26,7 +26,7 @@ template vtkImageData * CITK::GetVTKData<RGBImageType>(RGBImageType::Pointer);
 
 
 CITK::CITK(void)
-    :m_ImageListModel(0),
+    :m_ImageListModel(nullptr),
       m_ImageName("Orig")
 {
 
@@ -36,13 +36,13 @@ CITK::CITK(void)
 #elif defined(USE_MERGE)
 	m_DICOM = CMergeDicom::CreateNew();
 #else
-    m_DICOM = CITKDicom::CreateNew();
+    m_DICOM = std::unique_ptr<CITKDicom>(CITKDicom::CreateNew());
 #endif
 
     std::cout << m_DICOM->GetDescription() << std::endl;
 
 	/** Define a File Data Load Instance **/
-	m_FileLoader = CFileLoader::CreateNew();
+	m_FileLoader = std::unique_ptr<CFileLoader>(CFileLoader::CreateNew());
 
 	Init();
 
@@ -50,8 +50,6 @@ CITK::CITK(void)
 
 CITK::~CITK()
 {
-    delete m_DICOM;
-	delete m_FileLoader;
 	m_ImageListMap.clear();
 }
 
@@ -85,6 +83,7 @@ void CITK::LoadDicom()
 
     DDialog.setFileMode(QFileDialog::Directory);
     DDialog.setOption(QFileDialog::ShowDirsOnly);
+	DDialog.setOption(QFileDialog::DontUseNativeDialog);
 
     int result = DDialog.exec();
 
@@ -194,14 +193,14 @@ bool CITK::isDataLoaded()
 void CITK::SetImageListModel(QAbstractItemModel *tModel)
 {
 	/** Fix the List Model to the Qt Gui used to visualize image names**/
-    if (m_ImageListModel == 0)
+    if (m_ImageListModel == nullptr)
         m_ImageListModel = static_cast<QStandardItemModel*>(tModel);
 }
 
 InputImageType::Pointer CITK::GetImage(const QString &key) const
 {
 	/** Test whether the List Model is Set **/
-	if (m_ImageListModel == 0)
+	if (m_ImageListModel == nullptr)
     {
         std::cerr << "Error--> (" << __FILE__ << ":" << __LINE__ << ")" << std::endl;
         std::cerr << "ListModel Not Set: Please use SetImageListModel() " << std::endl;
@@ -293,7 +292,7 @@ template<typename T>
 int CITK::AddImageToList(QString key,  typename T::Pointer value)
 {
 	/** Error - The Input combo boxes are not connected **/
-    if (m_ImageListModel == 0)
+    if (m_ImageListModel == nullptr)
     {
         std::cerr << "Error--> (" << __FILE__ << ":" << __LINE__ << ")" << std::endl;
         std::cerr << "ListModel Not Set: Please use SetImageListModel() " << std::endl;

@@ -12,10 +12,6 @@ CFileLoader::CFileLoader()
 	m_RescaleData = false;
 }
 
-CFileLoader::~CFileLoader()
-{
-}
-
 void CFileLoader::OpenFile(std::string cFileName)
 {
 	/** Clean the Old Stuff **/

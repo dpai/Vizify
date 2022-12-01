@@ -40,11 +40,11 @@ private:
 /** Constructors and Destructors **/
 private:
     CFileLoader();
-    CFileLoader(const CFileLoader& rhs);
-    CFileLoader& operator =(const CFileLoader& rhs);
 
  public:
-    ~CFileLoader();
+    ~CFileLoader() = default;
+	CFileLoader(const CFileLoader& rhs) = delete;
+    CFileLoader& operator =(const CFileLoader& rhs) = delete;
 
 /** Function Members **/
  public:

@@ -2,6 +2,7 @@
 #define MRVIZIFYMAIN_H
 
 /** C++ Includes **/
+#include <memory>
 #include <stack>
 
 /** Qt Includes **/
@@ -43,9 +44,9 @@ private slots:
 
 private:
     Ui::MrVizifyMain			            *ui;
-    CITK						            *m_itk;
+    std::unique_ptr<CITK>				     m_itk;
     CVTKWidget					            *m_vtkwidget;
-	CMrVizThreshold				            *m_ThresholdWidget;
+	std::unique_ptr<CMrVizThreshold>         m_ThresholdWidget;
 	bool						             m_viewLoaded;
 	std::stack<QPushButton*>	             m_ModuleBtns;
 	std::map<unsigned short int, QWidget*>   m_Modules;
