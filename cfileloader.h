@@ -20,39 +20,31 @@ class CFileLoader
 
 /** Data **/
 private:
-	string									m_FileName;
-
-	string									m_FileDir;
-
-	InputImageType::Pointer					m_FileImage3D;
-
-	InputImage4DType::Pointer               m_FileImage4D;
-
-	bool									m_FileLoaded;
-
-	double									m_XYSliceOrientation[2];
-
+    string									m_FileName;
+    string									m_FileDir;
+    InputImageType::Pointer					m_FileImage3D;
+    InputImage4DType::Pointer               m_FileImage4D;
 	InternalPixelDataType			        m_InternalPixelType;
+	double									m_XYSliceOrientation[2];
+    bool									m_FileLoaded;
+    bool									m_RescaleData;
 
-	bool									m_RescaleData;
-
-	
 /** Constructors and Destructors **/
 private:
     CFileLoader();
 
- public:
+public:
     ~CFileLoader() = default;
 	CFileLoader(const CFileLoader& rhs) = delete;
     CFileLoader& operator =(const CFileLoader& rhs) = delete;
 
 /** Function Members **/
- public:
+public:
     static CFileLoader* CreateNew() {
         return new CFileLoader();
     }
 
-	bool isFileLoaded() {
+	bool isFileLoaded() const {
 		return m_FileLoaded;
 	}
 
@@ -66,15 +58,15 @@ private:
 
 	void Clean();
 
-	unsigned int Get4thDimension();
+	unsigned int Get4thDimension() const;
 
 	void GetImageXYOrientation(double *dir);
 
-	void RescaleDataOn() {
+	inline void RescaleDataOn() {
 		m_RescaleData = true;
 	}
 
-	void RescaleDataOff() {
+	inline void RescaleDataOff() {
 		m_RescaleData = false;
 	}
 
@@ -86,8 +78,6 @@ private:
 
 	template<typename T>
 	InputImage4DType::Pointer InternalImageReader(const char *);
-
-
 };
 
 #endif // CFILELOADER_H

@@ -2,14 +2,10 @@
 #include "itkCastImageFilter.h"
 #include "itkMinimumMaximumImageCalculator.h"
 
-/** Template Initializations **/
-template InputImage4DType::Pointer CFileLoader::InternalImageReader<double>(const char *);
-template InputImage4DType::Pointer CFileLoader::InternalImageReader<short>(const char *);
-
-CFileLoader::CFileLoader()
+CFileLoader::CFileLoader():
+m_FileLoaded(false),
+m_RescaleData(false)
 {
-	m_FileLoaded = false;
-	m_RescaleData = false;
 }
 
 void CFileLoader::OpenFile(std::string cFileName)
@@ -37,7 +33,7 @@ void CFileLoader::OpenFile(std::string cFileName)
 bool CFileLoader::CanITKRead(std::string cFileName)
 {
 	/** Create a ImageIOBase Object **/
-	itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(cFileName.c_str(), itk::ImageIOFactory::ReadMode);
+	auto imageIO = itk::ImageIOFactory::CreateImageIO(cFileName.c_str(), itk::ImageIOFactory::ReadMode);
 
 	/** File Cannot be Read **/
 	if (imageIO.IsNull())
@@ -78,11 +74,11 @@ template<typename T>
 InputImage4DType::Pointer CFileLoader::InternalImageReader(const char * cFileName)
 {
 	/** TypeDefs **/
-	typedef itk::Image<T, 4> TImageType;
-	typedef itk::ImageFileReader<TImageType> FileReaderType;
+	using TImageType=itk::Image<T, 4>;
+	using FileReaderType=itk::ImageFileReader<TImageType>;
 
 	/** Initialize a ITK File Reader **/
-	typename FileReaderType::Pointer cReader = FileReaderType::New();
+	auto cReader = FileReaderType::New();
 	cReader->SetFileName(cFileName);
 
 	/** Read **/
@@ -92,12 +88,12 @@ InputImage4DType::Pointer CFileLoader::InternalImageReader(const char * cFileNam
 
 		m_FileLoaded = true;
 
-		typename TImageType::Pointer cImage = cReader->GetOutput();
+		auto cImage = cReader->GetOutput();
 
 		// The Rescaling currently is only for tested for ADC map off READY View
 		if (m_RescaleData)
 		{
-			typedef itk::ImageRegionIterator<TImageType>				 RegionIteratorDouble3D;
+			using RegionIteratorDouble3D = itk::ImageRegionIterator<TImageType>;
 
 			RegionIteratorDouble3D cImage1Iterator(cImage, cImage->GetLargestPossibleRegion());
 
@@ -112,35 +108,35 @@ InputImage4DType::Pointer CFileLoader::InternalImageReader(const char * cFileNam
 		}
 		
 
-		typedef itk::MinimumMaximumImageCalculator<TImageType> CalculatorFilterType;
-		typename CalculatorFilterType::Pointer imageCalculator = CalculatorFilterType::New();
+		using CalculatorFilterType = itk::MinimumMaximumImageCalculator<TImageType>;
+		auto imageCalculator = CalculatorFilterType::New();
 		imageCalculator->SetImage(cImage);
 		imageCalculator->Compute();
 		std::cout << "Intensity Values are " << imageCalculator->GetMinimum() << " " << imageCalculator->GetMaximum() << std::endl;
 
-		typedef itk::CastImageFilter<TImageType, InputImage4DType> RescaleType;
-		typename RescaleType::Pointer rescaler = RescaleType::New();
+		using RescaleType = itk::CastImageFilter<TImageType, InputImage4DType>;
+		auto rescaler = RescaleType::New();
 		rescaler->SetInput(cImage);
 		rescaler->Update();
 
-		typename TImageType::PointType pType = cImage->GetOrigin();
+		auto pType = cImage->GetOrigin();
 
 		/** Print Meta Information about Image -- To Delete **/
 		std::cout << "Origin of the image is at " << pType[0] << " " << pType[1] << " "  << pType[2] << " " << pType[3] << std::endl;
 
-		InputImage4DType::DirectionType dType = cImage->GetDirection() ;
+		auto dType = cImage->GetDirection() ;
 
 		std::cout << "Direction Cosines are " << dType[0][0] << " " << dType[1][0] << " " << dType[2][0] << " "  << 
-				                                    dType[0][1] << " " << dType[1][1] << " " << dType[2][1] << " "  <<
-				                                    dType[0][2] << " " << dType[1][2] << " " << dType[2][2] << std::endl;
+				                                 dType[0][1] << " " << dType[1][1] << " " << dType[2][1] << " "  <<
+				                                 dType[0][2] << " " << dType[1][2] << " " << dType[2][2] << std::endl;
 
 		m_XYSliceOrientation[0] =  dType[0][0] + dType[1][0] + dType[2][0];
 		m_XYSliceOrientation[1] =  dType[0][1] + dType[1][1] + dType[2][1];
 
-		itk::MetaDataDictionary &fileDict = cImage->GetMetaDataDictionary();
+		auto &fileDict = cImage->GetMetaDataDictionary();
 
-		itk::MetaDataDictionary::ConstIterator itr = fileDict.Begin();
-		itk::MetaDataDictionary::ConstIterator end = fileDict.End();
+		auto itr = fileDict.Begin();
+		auto end = fileDict.End();
 
 		std::string value;
 		std::string label;
@@ -177,7 +173,7 @@ void CFileLoader::Clean()
 	m_FileName.clear();
 }
 
-unsigned int CFileLoader::Get4thDimension()
+unsigned int CFileLoader::Get4thDimension() const
 {
 	/** return 4th dimension if 4D data in memory .. else 0 **/
 	if (isFileLoaded())
@@ -203,34 +199,28 @@ InputImageType::Pointer CFileLoader::GetImage3D(unsigned int iID)
 		return nullptr;
 
 	/** Extract the 3D data **/
-	typedef itk::ExtractImageFilter< InputImage4DType, InputImageType > ExtractImageFilterType;
-	InputImage4DType::RegionType				extractRegion;
-
-	ExtractImageFilterType::Pointer		        extractfilter = ExtractImageFilterType::New();
-	InputImage4DType::RegionType				inputRegion   = m_FileImage4D->GetLargestPossibleRegion();
-		
-	InputImage4DType::SizeType					inputSize	  = inputRegion.GetSize();
-
-    InputImage4DType::IndexType					inputIndex    = inputRegion.GetIndex();
+	using ExtractImageFilterType = itk::ExtractImageFilter<InputImage4DType, InputImageType>;
+	InputImage4DType::RegionType extractRegion;
+	auto extractfilter = ExtractImageFilterType::New();
+	auto inputRegion = m_FileImage4D->GetLargestPossibleRegion();
+	auto inputSize = inputRegion.GetSize();
+    auto inputIndex    = inputRegion.GetIndex();
 
 	extractfilter->InPlaceOn();
 	extractfilter->SetDirectionCollapseToSubmatrix();
 
 	/** Set Slice to Extract **/
 	inputSize[3]  = 0;
-
 	inputIndex[3] = iID;
 
 	extractRegion.SetSize(inputSize);
 	extractRegion.SetIndex(inputIndex);
-
 	extractfilter->SetExtractionRegion(extractRegion);
 	extractfilter->SetInput(m_FileImage4D);
 
 	try 
 	{
 		extractfilter->Update();
-
 		m_FileImage3D = extractfilter->GetOutput();
 	}
 	catch (itk::ExceptionObject &excp)
