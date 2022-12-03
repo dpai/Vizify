@@ -182,7 +182,7 @@ unsigned int CFileLoader::Get4thDimension() const
 		return 0;
 }
 
-void CFileLoader::GetImageXYOrientation(double *dir)
+void CFileLoader::GetImageXYOrientation(double *dir) const
 {
 	dir[0] = m_XYSliceOrientation[0];
 	dir[1] = m_XYSliceOrientation[1];

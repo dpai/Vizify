@@ -1,5 +1,4 @@
-#ifndef CFILELOADER_H
-#define CFILELOADER_H
+#pragma once
 
 /** C++ Includes **/
 #include <string>
@@ -24,8 +23,8 @@ private:
     string									m_FileDir;
     InputImageType::Pointer					m_FileImage3D;
     InputImage4DType::Pointer               m_FileImage4D;
-	InternalPixelDataType			        m_InternalPixelType;
-	double									m_XYSliceOrientation[2];
+    InternalPixelDataType			        m_InternalPixelType;
+    double									m_XYSliceOrientation[2];
     bool									m_FileLoaded;
     bool									m_RescaleData;
 
@@ -35,7 +34,7 @@ private:
 
 public:
     ~CFileLoader() = default;
-	CFileLoader(const CFileLoader& rhs) = delete;
+    CFileLoader(const CFileLoader& rhs) = delete;
     CFileLoader& operator =(const CFileLoader& rhs) = delete;
 
 /** Function Members **/
@@ -44,40 +43,38 @@ public:
         return new CFileLoader();
     }
 
-	bool isFileLoaded() const {
-		return m_FileLoaded;
-	}
+    bool isFileLoaded() const noexcept {
+        return m_FileLoaded;
+    }
 
-	InputImageType::Pointer GetImage3D(unsigned int);
+    InputImageType::Pointer GetImage3D(unsigned int);
 
-	InputImage4DType::Pointer GetImage4D() {
-		return m_FileImage4D;
-	}
+    InputImage4DType::Pointer GetImage4D() {
+        return m_FileImage4D;
+    }
 
-	void OpenFile(std::string);
+    void OpenFile(std::string);
 
-	void Clean();
+    void Clean();
 
-	unsigned int Get4thDimension() const;
+    unsigned int Get4thDimension() const;
 
-	void GetImageXYOrientation(double *dir);
+    void GetImageXYOrientation(double *dir) const;
 
-	inline void RescaleDataOn() {
-		m_RescaleData = true;
-	}
+    inline void RescaleDataOn() {
+        m_RescaleData = true;
+    }
 
-	inline void RescaleDataOff() {
-		m_RescaleData = false;
-	}
+    inline void RescaleDataOff() {
+        m_RescaleData = false;
+    }
 
 private:
 
-	bool CanITKRead(std::string);
+    bool CanITKRead(std::string);
 
-	InputImage4DType::Pointer ReadImage(const char *, InternalPixelDataType);
+    InputImage4DType::Pointer ReadImage(const char *, InternalPixelDataType);
 
-	template<typename T>
-	InputImage4DType::Pointer InternalImageReader(const char *);
+    template<typename T>
+    InputImage4DType::Pointer InternalImageReader(const char *);
 };
-
-#endif // CFILELOADER_H
