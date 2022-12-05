@@ -21,8 +21,8 @@ CITK *CITK::m_CITKinstance = nullptr;
 
 /** template Initializations **/
 template int CITK::AddImageToList<OutputImageType>(QString, OutputImageType::Pointer);
-template vtkImageData * CITK::GetVTKData<InputImageType>(InputImageType::Pointer);
-template vtkImageData * CITK::GetVTKData<RGBImageType>(RGBImageType::Pointer);
+template vtkSmartPointer<vtkImageData> CITK::GetVTKData<InputImageType>(InputImageType::Pointer);
+template vtkSmartPointer<vtkImageData> CITK::GetVTKData<RGBImageType>(RGBImageType::Pointer);
 
 
 CITK::CITK(void):
@@ -124,7 +124,6 @@ void CITK::LoadData()
     if (result)
     {
         m_ImagePath = FDialog.selectedFiles()[0];
-
     }
     else
     {
@@ -294,7 +293,7 @@ int CITK::AddImageToList(QString key,  typename T::Pointer value)
 }
 
 template<typename T>
-vtkImageData * CITK::GetVTKData(typename T::Pointer cImage)
+vtkSmartPointer<vtkImageData> CITK::GetVTKData(typename T::Pointer cImage)
 {
     if (!isDataLoaded())
         return 0;
@@ -314,7 +313,7 @@ vtkImageData * CITK::GetVTKData(typename T::Pointer cImage)
     convert->SetInput(flipImage->GetOutput());
     convert->Update();
 
-    auto *cVTKData = vtkImageData::New();
+    auto cVTKData = vtkSmartPointer<vtkImageData>::New();
     cVTKData->DeepCopy(convert->GetOutput());
 
     return cVTKData;

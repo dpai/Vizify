@@ -315,9 +315,9 @@ void CVTKWidget::Render()
     m_MPRRenderInteractor->Render();
 }
 
-void CVTKWidget::SetInput(vtkImageData *cImage)
+void CVTKWidget::SetInput(const vtkSmartPointer<vtkImageData>& cImage)
 {
-    m_ImageData = vtkSmartPointer<vtkImageData>::Take(cImage);
+    m_ImageData = cImage;
 }
 
 void CVTKWidget::SetXYImageOrientation(double *dir)

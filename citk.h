@@ -23,6 +23,7 @@
 
 /** VTK Includes **/
 #include <vtkImageData.h>
+#include <vtkSmartPointer.h>
 
 class CITK
 {
@@ -85,7 +86,7 @@ private:
     int AddImageToList(QString, typename T::Pointer);
 
     template<typename T>
-    vtkImageData * GetVTKData(typename T::Pointer);
+    vtkSmartPointer<vtkImageData> GetVTKData(typename T::Pointer);
 
     unsigned int Get4thDimension() {
         return m_4thDimension;

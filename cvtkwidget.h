@@ -96,7 +96,7 @@ public:
 
     void Render();
 
-    void SetInput(vtkImageData *);
+    void SetInput(const vtkSmartPointer<vtkImageData>& cImage);
 
     void SetOverLay(vtkImageData *);
 
