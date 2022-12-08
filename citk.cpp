@@ -21,8 +21,8 @@ CITK *CITK::m_CITKinstance = nullptr;
 
 /** template Initializations **/
 template int CITK::AddImageToList<OutputImageType>(QString, OutputImageType::Pointer);
-template vtkSmartPointer<vtkImageData> CITK::GetVTKData<InputImageType>(InputImageType::Pointer);
-template vtkSmartPointer<vtkImageData> CITK::GetVTKData<RGBImageType>(RGBImageType::Pointer);
+template vtkSmartPointer<vtkImageData> CITK::GetVTKData<InputImageType>(const InputImageType::Pointer&);
+template vtkSmartPointer<vtkImageData> CITK::GetVTKData<RGBImageType>(const RGBImageType::Pointer&);
 
 
 CITK::CITK(void):
@@ -166,7 +166,7 @@ void CITK::SetInitTraits()
     m_ImageListModel->appendRow(new QStandardItem(m_ImageName));
 }
 
-bool CITK::isDataLoaded()
+bool CITK::isDataLoaded() const noexcept
 {
     /** Return the Data State Loaded **/
     switch (m_DataLoadState)
@@ -188,7 +188,7 @@ void CITK::SetImageListModel(QAbstractItemModel *tModel)
         m_ImageListModel = static_cast<QStandardItemModel*>(tModel);
 }
 
-InputImageType::Pointer CITK::GetImage(const QString &key) const
+const InputImageType::Pointer CITK::GetImage(const QString &key) const
 {
     /** Test whether the List Model is Set **/
     if (m_ImageListModel == nullptr)
@@ -197,8 +197,8 @@ InputImageType::Pointer CITK::GetImage(const QString &key) const
         std::cerr << "ListModel Not Set: Please use SetImageListModel() " << std::endl;
         return nullptr;
     }
-
-    return m_ImageListMap[key];
+    auto itr = m_ImageListMap.find(key);
+    return (itr != m_ImageListMap.end()) ? itr.value() : nullptr;
 }
 
 bool CITK::Update3DVolume(unsigned int value)
@@ -293,7 +293,7 @@ int CITK::AddImageToList(QString key,  typename T::Pointer value)
 }
 
 template<typename T>
-vtkSmartPointer<vtkImageData> CITK::GetVTKData(typename T::Pointer cImage)
+vtkSmartPointer<vtkImageData> CITK::GetVTKData(typename T::Pointer const& cImage)
 {
     if (!isDataLoaded())
         return 0;

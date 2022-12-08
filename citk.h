@@ -72,13 +72,13 @@ private:
 
     void LoadData();
 
-    bool isDataLoaded();
+    bool isDataLoaded() const noexcept;
 
     QString GetImageDirectory() {
         return m_ImagePath;
     }
     
-    InputImageType::Pointer GetImage(const QString& = "Orig") const ;
+    const InputImageType::Pointer GetImage(const QString& = "Orig") const ;
 
     void SetImageListModel(QAbstractItemModel *tModel);
 
@@ -86,13 +86,13 @@ private:
     int AddImageToList(QString, typename T::Pointer);
 
     template<typename T>
-    vtkSmartPointer<vtkImageData> GetVTKData(typename T::Pointer);
+    vtkSmartPointer<vtkImageData> GetVTKData(typename T::Pointer const&);
 
-    unsigned int Get4thDimension() {
+    unsigned int Get4thDimension() const noexcept {
         return m_4thDimension;
     }
     
-    unsigned int GetCurrentVolumeID() {
+    unsigned int GetCurrentVolumeID() const noexcept {
         return m_VolumeSequenceID;
     }
 
