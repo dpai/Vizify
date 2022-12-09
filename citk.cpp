@@ -20,7 +20,7 @@
 CITK *CITK::m_CITKinstance = nullptr;
 
 /** template Initializations **/
-template int CITK::AddImageToList<OutputImageType>(QString, OutputImageType::Pointer);
+template int CITK::AddImageToList<OutputImageType>(const QString&, OutputImageType::Pointer);
 template vtkSmartPointer<vtkImageData> CITK::GetVTKData<InputImageType>(const InputImageType::Pointer&);
 template vtkSmartPointer<vtkImageData> CITK::GetVTKData<RGBImageType>(const RGBImageType::Pointer&);
 
@@ -266,14 +266,14 @@ double *CITK::GetXYImageOrientation()
     return m_XYImageOrientation;
 }
 
-void CITK::SaveToDicom(InputImageType::Pointer tImage, QString Dir, float Dx, float Dy, float Dz)
+void CITK::SaveToDicom(const InputImageType::Pointer& tImage, const QString& Dir, float Dx, float Dy, float Dz)
 {
     //Teast
     m_DICOM->SaveToDicom(tImage, m_VolumeSequenceID, Dir, Dx, Dy, Dz);
 }
 
 template<typename T>
-int CITK::AddImageToList(QString key,  typename T::Pointer value)
+int CITK::AddImageToList(const QString& key,  typename T::Pointer value)
 {
     /** Error - The Input combo boxes are not connected **/
     if (m_ImageListModel == nullptr)

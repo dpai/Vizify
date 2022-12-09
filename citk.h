@@ -74,7 +74,7 @@ private:
 
     bool isDataLoaded() const noexcept;
 
-    QString GetImageDirectory() {
+    const QString& GetImageDirectory() const{
         return m_ImagePath;
     }
     
@@ -83,7 +83,7 @@ private:
     void SetImageListModel(QAbstractItemModel *tModel);
 
     template<typename T>
-    int AddImageToList(QString, typename T::Pointer);
+    int AddImageToList(const QString&, typename T::Pointer);
 
     template<typename T>
     vtkSmartPointer<vtkImageData> GetVTKData(typename T::Pointer const&);
@@ -100,7 +100,7 @@ private:
 
     bool GetImageParamsAsModel(QAbstractItemModel *);
 
-    void SaveToDicom(InputImageType::Pointer, QString, float, float, float);
+    void SaveToDicom(const InputImageType::Pointer&, const QString&, float, float, float);
 
     double *GetXYImageOrientation(void);
 

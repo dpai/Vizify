@@ -32,7 +32,7 @@ public:
 	virtual bool GetImageParams(int, std::map<std::string, std::string> &) {
 		return true;
 	}
-	virtual void SaveToDicom(InputImageType::Pointer Image, int volID, QString Dir, float, float, float)
+	virtual void SaveToDicom(const InputImageType::Pointer& Image, int volID, const QString& Dir, float, float, float)
 	{
 	}
 	virtual void GetImageXYOrientation(double *dir) 
