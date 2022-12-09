@@ -14,31 +14,23 @@
 
 /** CITKDicom: A concrete class implementation of the DICOM loader based on the GDCM library wrapped by ITK **/
 
-class CITKDicom : public CDicom
+class CITKDicom final : public CDicom
 {
 
 /** Typedefs **/
 private:
     using SeriesReaderType = itk::ImageSeriesReader< InputImage4DType >;
-
     using GDCMImageIOType = itk::GDCMImageIO;
-
     using InputNamesGeneratorType = itk::GDCMSeriesFileNames;
-
-	using Input2DImageType =  itk::Image< PixelDataType, 2>;
+    using Input2DImageType =  itk::Image< PixelDataType, 2>;
 
 /** Data **/
 private:
     InputImage4DType::Pointer                                   m_DicomImage4D;
-
-	InputImageType::Pointer										m_DicomImage3D;
-
-	Input2DImageType::Pointer								    m_DicomImage2D;
-
+    InputImageType::Pointer										m_DicomImage3D;
+    Input2DImageType::Pointer								    m_DicomImage2D;
     std::string                                                 m_DicomDir;
-
     SeriesReaderType::Pointer                                   m_dicomReader;
-
     bool                                                        m_DicomLoaded;
 
 /** Constructors and Destructors **/
@@ -53,27 +45,26 @@ public:
 /** Function Members **/
 public:
     static CITKDicom* CreateNew() {
-            return new CITKDicom();
+            return new CITKDicom{};
         }
 
-    void OpenDicomDir(std::string ) final;
+    void OpenDicomDir(const std::string&) override;
 
-    InputImage4DType::Pointer GetImage4D() final;
+    InputImage4DType::Pointer GetImage4D() override;
 
-	InputImageType::Pointer  GetImage3D(int) final;
+    InputImageType::Pointer  GetImage3D(int) override;
 
-    bool isDicomLoaded() final;
+    bool isDicomLoaded() noexcept override;
 
-    std::string& GetDicomDir() final;
+    const std::string& GetDicomDir() override;
 
-    std::string GetDescription() final;
+    const std::string& GetDescription() override;
 
-	void Clean() final;
+    void Clean() override;
 
-	unsigned int Get4thDimension() final;
+    unsigned int Get4thDimension() override;
 
 private:
-	bool ExtractVolumefrom4D(unsigned int iIndex);
-	bool ExtractVolumefrom3D(unsigned int iIndex);
-
+    bool ExtractVolumefrom4D(unsigned int iIndex);
+    bool ExtractVolumefrom3D(unsigned int iIndex);
 };

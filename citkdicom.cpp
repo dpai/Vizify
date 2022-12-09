@@ -5,14 +5,14 @@
 #include <itkImageSeriesWriter.h>
 #include <itkTileImageFilter.h>
 
-CITKDicom::CITKDicom()
+CITKDicom::CITKDicom() :
+m_DicomLoaded(false)
 {
-    m_DicomLoaded = false;
 }
 
-std::string CITKDicom::GetDescription()
+const std::string& CITKDicom::GetDescription()
 {
-	static auto desc = std::string("ITK DICOM: GDCM");
+	static const std::string desc{"ITK DICOM: GDCM"};
     return desc;
 }
 
@@ -24,7 +24,7 @@ void CITKDicom::Clean()
 	m_dicomReader = nullptr;
 }
 
-void CITKDicom::OpenDicomDir(std::string strdir)
+void CITKDicom::OpenDicomDir(const std::string& strdir)
 {
 	/** Clean the Old Stuff **/
 	Clean();
@@ -33,10 +33,10 @@ void CITKDicom::OpenDicomDir(std::string strdir)
     m_DicomDir = strdir;
 
     /** Initialize an GDCM IO Object **/
-    GDCMImageIOType::Pointer gdcmIO = GDCMImageIOType::New();
+    auto gdcmIO = GDCMImageIOType::New();
 
     /** Get the filenames in the series **/
-    InputNamesGeneratorType::Pointer inputNames = InputNamesGeneratorType::New();
+    auto inputNames = InputNamesGeneratorType::New();
     inputNames->SetLoadPrivateTags(true);
     inputNames->SetInputDirectory(strdir);
 
@@ -45,18 +45,16 @@ void CITKDicom::OpenDicomDir(std::string strdir)
 
     try
     {
-        const SeriesReaderType::FileNamesContainer & filenames = inputNames->GetInputFileNames();
+        const auto& filenames = inputNames->GetInputFileNames();
 
         // Note: Code Hack To allow Private Tag Loading .
         gdcmIO->SetLoadPrivateTags(true);
 
         m_dicomReader->SetImageIO( gdcmIO );
-
         m_dicomReader->SetFileNames( filenames );
-
         m_dicomReader->Update();
 
-        SeriesReaderType::FileNamesContainer::const_iterator fitr = filenames.begin();
+        auto fitr = filenames.begin();
 
         while (fitr != filenames.end())
         {
@@ -65,10 +63,9 @@ void CITKDicom::OpenDicomDir(std::string strdir)
         }
 
         m_DicomLoaded = true;
-
         m_DicomImage4D = m_dicomReader->GetOutput();
 
-		SeriesReaderType::DictionaryRawPointer fileDict = (*m_dicomReader->GetMetaDataDictionaryArray())[0];
+		const auto fileDict = (*m_dicomReader->GetMetaDataDictionaryArray())[0];
 
 		// Get some information on the header
 		itk::MetaDataDictionary::ConstIterator itr = fileDict->Begin();
@@ -182,10 +179,9 @@ void CITKDicom::OpenDicomDir(std::string strdir)
     }
 }
 
-
 InputImage4DType::Pointer CITKDicom::GetImage4D()
 {
-    return (m_DicomLoaded)?m_DicomImage4D:nullptr;
+    return (m_DicomLoaded) ? m_DicomImage4D : nullptr;
 }
 
 InputImageType::Pointer CITKDicom::GetImage3D(int iIndex)
@@ -216,30 +212,24 @@ bool CITKDicom::ExtractVolumefrom4D(unsigned int iIndex)
 	}
 
 	/** Extract the 3D data **/
-	typedef itk::ExtractImageFilter< InputImage4DType, InputImageType > ExtractImageFilterType;
-	InputImage4DType::RegionType				extractRegion;
-
-	ExtractImageFilterType::Pointer		        extractfilter = ExtractImageFilterType::New();
-	InputImage4DType::RegionType				inputRegion   = m_DicomImage4D->GetLargestPossibleRegion();
-		
-	InputImage4DType::SizeType					inputSize	  = inputRegion.GetSize();
-
-    InputImage4DType::IndexType					inputIndex    = inputRegion.GetIndex();
+	using ExtractImageFilterType = itk::ExtractImageFilter<InputImage4DType, InputImageType>;
+	auto extractfilter = ExtractImageFilterType::New();
+	auto inputRegion = m_DicomImage4D->GetLargestPossibleRegion();
+	auto inputSize = inputRegion.GetSize();
+    auto inputIndex = inputRegion.GetIndex();
 
 	extractfilter->InPlaceOn();
 	extractfilter->SetDirectionCollapseToSubmatrix();
 
 	/** Set Slice to Extract **/
 	inputSize[3]  = 0;
-
 	inputIndex[3] = iIndex;
-
+	InputImage4DType::RegionType extractRegion;
 	extractRegion.SetSize(inputSize);
 	extractRegion.SetIndex(inputIndex);
 
 	extractfilter->SetExtractionRegion(extractRegion);
 	extractfilter->SetInput(m_DicomImage4D);
-
 	extractfilter->Update();
 
 	m_DicomImage3D = extractfilter->GetOutput();
@@ -259,30 +249,25 @@ bool CITKDicom::ExtractVolumefrom3D(unsigned int iIndex)
 	}
 
 	/** Extract the 3D data **/
-	typedef itk::ExtractImageFilter< InputImageType, Input2DImageType > ExtractImageFilterType;
-	InputImageType::RegionType				extractRegion;
-
-	ExtractImageFilterType::Pointer		        extractfilter = ExtractImageFilterType::New();
-	InputImageType::RegionType				inputRegion   = m_DicomImage3D->GetLargestPossibleRegion();
-		
-	InputImageType::SizeType					inputSize	  = inputRegion.GetSize();
-
-    InputImageType::IndexType					inputIndex    = inputRegion.GetIndex();
+	using ExtractImageFilterType = itk::ExtractImageFilter<InputImageType, Input2DImageType>;
+	auto extractfilter = ExtractImageFilterType::New();
+	auto inputRegion = m_DicomImage3D->GetLargestPossibleRegion();
+	auto inputSize = inputRegion.GetSize();
+    auto inputIndex = inputRegion.GetIndex();
 
 	extractfilter->InPlaceOn();
 	extractfilter->SetDirectionCollapseToSubmatrix();
 
 	/** Set Slice to Extract **/
 	inputSize[2]  = 0;
-
 	inputIndex[2] = iIndex;
 
+	InputImageType::RegionType extractRegion;
 	extractRegion.SetSize(inputSize);
 	extractRegion.SetIndex(inputIndex);
 
 	extractfilter->SetExtractionRegion(extractRegion);
 	extractfilter->SetInput(m_DicomImage3D);
-
 	extractfilter->Update();
 
 	m_DicomImage2D = extractfilter->GetOutput();
@@ -290,12 +275,12 @@ bool CITKDicom::ExtractVolumefrom3D(unsigned int iIndex)
 	return true;
 }
 
-bool CITKDicom::isDicomLoaded()
+bool CITKDicom::isDicomLoaded() noexcept
 {
     return m_DicomLoaded;
 }
 
-std::string& CITKDicom::GetDicomDir()
+const std::string& CITKDicom::GetDicomDir()
 {
     return m_DicomDir;
 }
