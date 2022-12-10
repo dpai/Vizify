@@ -72,7 +72,7 @@ MrVizifyMain::~MrVizifyMain()
 void MrVizifyMain::LinkInputModels(QAbstractItemModel *model)
 {
 	m_itk->SetImageListModel(model);
-	m_ThresholdWidget = std::make_unique<CMrVizThreshold>(model, this);
+	m_ThresholdWidget = std::make_unique<CMrVizThreshold>(model, m_itk.get(), this);
 	m_ThresholdWidget->setWindowFlags(Qt::Window);
 }
 
