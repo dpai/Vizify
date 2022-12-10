@@ -1,6 +1,7 @@
-#ifndef CMRVIZTHRESHOLD_H
-#define CMRVIZTHRESHOLD_H
+#pragma once
 
+/** C++ Includes **/
+#include <memory>
 
 /** Qt Includes **/
 #include <QWidget>
@@ -15,7 +16,6 @@ class CMrVizThreshold;
 }
 
 class CThresholdFactory;
-
 class CThresholdObject;
 
 class CMrVizThreshold : public QWidget
@@ -24,28 +24,22 @@ class CMrVizThreshold : public QWidget
 
 /** Constructors and Destructors **/
 public:
-    explicit CMrVizThreshold( QAbstractItemModel *model, QWidget *parent = 0);
+    explicit CMrVizThreshold(QAbstractItemModel *model, CITK* const c_itk, QWidget *parent = 0);
     ~CMrVizThreshold();
 
 /** Data **/
 private:
-    Ui::CMrVizThreshold  *ui;
-
-    CThresholdFactory    *m_ThresholdFactory;
-
-	CVTKWidget           *m_inputvtkwidget;
-
-	CVTKWidget           *m_thresholdvtkwidget;
-
-	CITK			     *const m_itk;
-
-	CThresholdObject     *m_ThresholdObject;
-
-    QString               m_InputProcessedImageName;
+    QString m_InputProcessedImageName;
+    std::unique_ptr<Ui::CMrVizThreshold> ui;
+    std::unique_ptr<CVTKWidget> m_inputvtkwidget;
+    std::unique_ptr<CVTKWidget> m_thresholdvtkwidget;
+    std::unique_ptr<CThresholdFactory> m_ThresholdFactory;
+    std::unique_ptr<CThresholdObject> m_ThresholdObject;
+    CITK *const m_itk;
 
 /** Function Members (Public) **/
 public:
-	void Init();
+    void Init();
 
 /** Qt SLots **/
 private slots:
@@ -58,7 +52,4 @@ private slots:
 /** Function Members (Private) **/
 private:
     void ProcessThreshold();
-
 };
-
-#endif // CMRVIZTHRESHOLD_H
