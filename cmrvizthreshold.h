@@ -1,6 +1,7 @@
-#ifndef CMRVIZTHRESHOLD_H
-#define CMRVIZTHRESHOLD_H
+#pragma once
 
+/** C++ Includes **/
+#include <memory>
 
 /** Qt Includes **/
 #include <QWidget>
@@ -15,7 +16,6 @@ class CMrVizThreshold;
 }
 
 class CThresholdFactory;
-
 class CThresholdObject;
 
 class CMrVizThreshold : public QWidget
@@ -30,22 +30,16 @@ public:
 /** Data **/
 private:
     Ui::CMrVizThreshold  *ui;
-
     CThresholdFactory    *m_ThresholdFactory;
-
-	CVTKWidget           *m_inputvtkwidget;
-
-	CVTKWidget           *m_thresholdvtkwidget;
-
-	CITK			     *const m_itk;
-
-	CThresholdObject     *m_ThresholdObject;
-
+    CVTKWidget           *m_inputvtkwidget;
+    CVTKWidget           *m_thresholdvtkwidget;
+    CITK			     *const m_itk;
+    CThresholdObject     *m_ThresholdObject;
     QString               m_InputProcessedImageName;
 
 /** Function Members (Public) **/
 public:
-	void Init();
+    void Init();
 
 /** Qt SLots **/
 private slots:
@@ -60,5 +54,3 @@ private:
     void ProcessThreshold();
 
 };
-
-#endif // CMRVIZTHRESHOLD_H
