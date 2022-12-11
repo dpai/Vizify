@@ -1,5 +1,4 @@
-#ifndef CTHRESHOLDOBJECT_H
-#define CTHRESHOLDOBJECT_H
+#pragma once
 
 #include "dataobjects.h"
 
@@ -11,14 +10,15 @@
 #include <itkCastImageFilter.h>
 
 /** Global Initialization **/
-enum {
-    Otsu = 0, Triangle = 1
+enum class Algorithms 
+{
+    Otsu = 0, 
+    Triangle = 1
 };
 
 /** typedefs **/
-typedef unsigned char                                       ThresholdPixelType;
-
-typedef itk::Image<ThresholdPixelType, InputDimension>      ThresholdImageType;
+using ThresholdPixelType = unsigned char;
+using ThresholdImageType = itk::Image<ThresholdPixelType, InputDimension>;
 
 /** CThresholdObject: An abstract class for threshold objects **/
 
@@ -35,46 +35,50 @@ public:
 
 /** Data Members **/
 private:
-   int  nLevels;
-   InputImageType::Pointer         m_InputImage;
-   OutputImageType::Pointer        m_OutputImage;
-   RGBImageType::Pointer           m_RGBOutputImage;
+    InputImageType::Pointer m_InputImage;
+    OutputImageType::Pointer m_OutputImage;
+    RGBImageType::Pointer m_RGBOutputImage;
+    int  nLevels;
 
 /** Function Members (Public) **/
 public:
-   void SetInput(InputImageType::Pointer cImage) {
-	   m_InputImage = cImage;
-   }
+    void SetInput(const InputImageType::Pointer& cImage) 
+    {
+        m_InputImage = cImage;
+    }
 
-   InputImageType::Pointer GetInput() {
-       return m_InputImage;
-   }
+    const InputImageType::Pointer& GetInput() const noexcept 
+    {
+        return m_InputImage;
+    }
 
-   void SetThresholdLevels(int levels) {
-       nLevels = levels;
-   }
+    void SetThresholdLevels(int levels) noexcept 
+    {
+        nLevels = levels;
+    }
 
-   virtual int Process() = 0;
+    virtual int Process() = 0;
 
-   virtual QString GetDescription() = 0;
+    virtual const QString& GetDescription() = 0;
 
-   OutputImageType::Pointer GetOutput() {
-       return m_OutputImage;
-   }
+    const OutputImageType::Pointer& GetOutput() const noexcept 
+    {
+        return m_OutputImage;
+    }
 
-   RGBImageType * GetRGBOutput() {
-	   return m_RGBOutputImage;
-   }
+    const RGBImageType::Pointer& GetRGBOutput() const noexcept 
+    {
+        return m_RGBOutputImage;
+    }
 
-   int GetLevels() {
-       return nLevels;
-   }
+    int GetLevels() const noexcept 
+    {
+        return nLevels;
+    }
 
 /** Function Members (Protected) **/
 protected:
-   void SetOutput(ThresholdImageType::Pointer cImage);
+    void SetOutput(ThresholdImageType::Pointer cImage);
 
-   void SetRGBOutput(ThresholdImageType::Pointer cImage);
+    void SetRGBOutput(ThresholdImageType::Pointer cImage);
 };
-
-#endif // CTHRESHOLDOBJECT_H

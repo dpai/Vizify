@@ -1,5 +1,4 @@
-#ifndef THRESHOLDOBJECTS_H
-#define THRESHOLDOBJECTS_H
+#pragma once
 
 #include "cthresholdobject.h"
 #include "dataobjects.h"
@@ -10,49 +9,46 @@
 #include <itkRescaleIntensityImageFilter.h>
 
 /** Otsu Threshold **/
-class COtsuThresholdObject : public CThresholdObject
+class COtsuThresholdObject final : public CThresholdObject
 {
-private:
-    COtsuThresholdObject() {
-    }
-    COtsuThresholdObject(const COtsuThresholdObject& rhs);
-    COtsuThresholdObject& operator =(const COtsuThresholdObject& rhs);
-
 public:
-    ~COtsuThresholdObject(){}
+    COtsuThresholdObject() = default;
+    COtsuThresholdObject(const COtsuThresholdObject& rhs) = delete;
+    COtsuThresholdObject& operator =(const COtsuThresholdObject& rhs) = delete;
 
-    static COtsuThresholdObject* CreateNew() {
+    static COtsuThresholdObject* CreateNew() 
+    {
         return new COtsuThresholdObject();
     }
 
-	QString GetDescription() {
-		return QString("_Otsu");
+	const QString& GetDescription() override
+    {
+        static const QString desc{"_Otsu"};
+		return desc;
 	}
 
-    int Process() {
-
+    int Process() override
+    {
 		/** Initializations **/
-        InputImageType::Pointer cImage = GetInput();
-		int levels = GetLevels();
+        const auto cImage = GetInput();
+		const auto levels = GetLevels();
 
 		/** Sanity Chech - Input Image is Present **/
         if (cImage.IsNotNull())
         {
             /** Initialize the Otsu Thresholder **/
-            typedef itk::OtsuMultipleThresholdsImageFilter< ThresholdImageType, ThresholdImageType > OtsuFilterType;
-            typedef OtsuFilterType::ThresholdVectorType ThresholdVectorType;
-
-            typedef itk::RescaleIntensityImageFilter< InputImageType, ThresholdImageType > RescaleFilterType;
+            using OtsuFilterType = itk::OtsuMultipleThresholdsImageFilter<ThresholdImageType, ThresholdImageType>;
+            using ThresholdVectorType = OtsuFilterType::ThresholdVectorType;
+            using RescaleFilterType = itk::RescaleIntensityImageFilter<InputImageType, ThresholdImageType> ;
 
 			/** Rescale the Image **/
-            RescaleFilterType::Pointer rescaler = RescaleFilterType::New();
+            auto rescaler = RescaleFilterType::New();
             rescaler->SetOutputMinimum( 0 );
             rescaler->SetOutputMaximum( 255 );
             rescaler->SetInput(cImage);
 
 			/** Setup the Otsu Filter Input **/
-            OtsuFilterType::Pointer otsuFilter = OtsuFilterType::New();
-
+            auto otsuFilter = OtsuFilterType::New();
             otsuFilter->SetInput(rescaler->GetOutput());
             otsuFilter->SetNumberOfThresholds(levels);
             otsuFilter->SetNumberOfHistogramBins(255);
@@ -71,8 +67,8 @@ public:
             }
 
 			/** Print The Thresholds on the Console - Will add a Status bar later **/
-			const ThresholdVectorType &thresholdVector = otsuFilter->GetThresholds();
-			ThresholdVectorType::const_iterator itNum = thresholdVector.begin();
+			const auto& thresholdVector = otsuFilter->GetThresholds();
+			auto itNum = thresholdVector.begin();
 
 			for (; itNum < thresholdVector.end() ; itNum++)
 			{
@@ -95,48 +91,46 @@ public:
 
 
 /** Triangle Threshold **/
-class CTriangleThresholdObject : public CThresholdObject
+class CTriangleThresholdObject final : public CThresholdObject
 {
-private:
-    CTriangleThresholdObject() {
-    }
-    CTriangleThresholdObject(const CTriangleThresholdObject& rhs);
-    CTriangleThresholdObject& operator =(const CTriangleThresholdObject& rhs);
-
 public:
-    ~CTriangleThresholdObject(){}
+    CTriangleThresholdObject() = default;
+    CTriangleThresholdObject(const CTriangleThresholdObject& rhs) = delete;
+    CTriangleThresholdObject& operator =(const CTriangleThresholdObject& rhs) = delete;
 
-    static CTriangleThresholdObject* CreateNew() {
+    static CTriangleThresholdObject* CreateNew() 
+    {
         return new CTriangleThresholdObject();
     }
 
-	QString GetDescription() {
-		return QString("_Triangle");
+	const QString& GetDescription() override
+    {
+        static const QString desc{"_Triangle"};
+		return desc;
 	}
 
-    int Process() {
+    int Process() override
+    {
 
 		/** Initializations **/
-        InputImageType::Pointer cImage = GetInput();
-		int levels = GetLevels();
+        const auto cImage = GetInput();
+		const auto levels = GetLevels();
 
 		/** Sanity Chech - Input Image is Present **/
         if (cImage.IsNotNull())
         {
             /** Initialize the Otsu Thresholder **/
-            typedef itk::TriangleThresholdImageFilter< ThresholdImageType, ThresholdImageType > TriangleFilterType;
-
-            typedef itk::RescaleIntensityImageFilter< InputImageType, ThresholdImageType > RescaleFilterType;
+            using TriangleFilterType = itk::TriangleThresholdImageFilter<ThresholdImageType, ThresholdImageType>;
+            using RescaleFilterType = itk::RescaleIntensityImageFilter<InputImageType, ThresholdImageType>;
 
 			/** Rescale the Image **/
-            RescaleFilterType::Pointer rescaler = RescaleFilterType::New();
+            auto rescaler = RescaleFilterType::New();
             rescaler->SetOutputMinimum( 0 );
             rescaler->SetOutputMaximum( 255 );
             rescaler->SetInput(cImage);
 
 			/** Setup the Otsu Filter Input **/
-            TriangleFilterType::Pointer triangleFilter = TriangleFilterType::New();
-
+            auto triangleFilter = TriangleFilterType::New();
             triangleFilter->SetInput(rescaler->GetOutput());
             triangleFilter->SetNumberOfHistogramBins(255);
 			triangleFilter->SetInsideValue(0);
@@ -171,4 +165,3 @@ public:
         return -1;
     }  // End of Process()
 };
-#endif // THRESHOLDOBJECTS_H
