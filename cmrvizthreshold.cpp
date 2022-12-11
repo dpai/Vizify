@@ -11,7 +11,7 @@ CMrVizThreshold::~CMrVizThreshold() = default;
 
 CMrVizThreshold::CMrVizThreshold(QAbstractItemModel *model, CITK* const c_itk, QWidget *parent) :
 QWidget(parent),
-ui(new Ui::CMrVizThreshold()),
+ui(std::make_unique<Ui::CMrVizThreshold>()),
 m_ThresholdObject(nullptr),
 m_itk(c_itk)
 {
@@ -27,8 +27,8 @@ m_itk(c_itk)
     m_thresholdvtkwidget->SetVTKWidget(ui->qWidget_OutputView);
 
     /** Supported Threshold Algorithms **/
-    ui->cBox_ThreshAlg->addItem("Otsu", Otsu);
-    ui->cBox_ThreshAlg->addItem("Triangle", Triangle);
+    ui->cBox_ThreshAlg->addItem("Otsu", static_cast<int>(Algorithms::Otsu));
+    ui->cBox_ThreshAlg->addItem("Triangle", static_cast<int>(Algorithms::Triangle));
 }
 
 void CMrVizThreshold::Init()
@@ -52,7 +52,7 @@ void CMrVizThreshold::ProcessThreshold()
     m_InputProcessedImageName = ui->cBox_InputImg->currentText();
 
     /** Retrieve the selected Threshold Algorithm **/
-    m_ThresholdObject = std::unique_ptr<CThresholdObject>(m_ThresholdFactory->CreateThresholdObject(ui->cBox_ThreshAlg->itemData(ui->cBox_ThreshAlg->currentIndex()).toInt()));
+    m_ThresholdObject = std::unique_ptr<CThresholdObject>(m_ThresholdFactory->CreateThresholdObject(static_cast<Algorithms>(ui->cBox_ThreshAlg->itemData(ui->cBox_ThreshAlg->currentIndex()).toInt())));
     /** Set the Input Image **/
     m_ThresholdObject->SetInput(m_itk->GetImage(m_InputProcessedImageName));
 
