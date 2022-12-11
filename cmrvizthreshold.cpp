@@ -11,7 +11,7 @@ CMrVizThreshold::~CMrVizThreshold() = default;
 
 CMrVizThreshold::CMrVizThreshold(QAbstractItemModel *model, CITK* const c_itk, QWidget *parent) :
 QWidget(parent),
-ui(new Ui::CMrVizThreshold()),
+ui(std::make_unique<Ui::CMrVizThreshold>()),
 m_ThresholdObject(nullptr),
 m_itk(c_itk)
 {
