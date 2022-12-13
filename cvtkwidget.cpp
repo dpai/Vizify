@@ -1,7 +1,6 @@
 #include "cvtkwidget.h"
 #include <sstream>
 
-
 #define _TRACE
 
 /** Static Initializations - Not Sure if Best Option . Will remove later  **/
@@ -31,31 +30,26 @@ static double    sagittalElements[16] =
 #endif
 
 CVTKWidget::CVTKWidget(QWidget *parent) :
-    QVTKOpenGLNativeWidget(parent)
+QVTKOpenGLNativeWidget(parent),
+m_vtkWidget(nullptr),
+m_ImageData(nullptr),
+m_Direction(Z)
 {
     /*
      * VTK Setup
      */
-
-    m_vtkWidget = 0;
-
-    m_MPRRenderer          = vtkSmartPointer<vtkRenderer>::New();
-
+    m_MPRRenderer = vtkSmartPointer<vtkRenderer>::New();
     m_MPRRenderer->SetBackground(25.0/255.0,51.0/255.0,76.0/255.0);
-    m_RenderStyle          = vtkSmartPointer<vtkInteractorStyleImage>::New();
+    m_RenderStyle = vtkSmartPointer<vtkInteractorStyleImage>::New();
     m_RenderStyle->SetInteractionModeToImage3D();
-    m_PixelPicker          = vtkPropPicker::New();
+    m_PixelPicker = vtkPropPicker::New();
     m_PixelPicker->PickFromListOn();
-    m_CornerAnnotation     = vtkSmartPointer<vtkCornerAnnotation>::New();
-    m_CornerAnnotation->SetLinearFontScaleFactor( 2 );
-    m_CornerAnnotation->SetNonlinearFontScaleFactor( 1 );
-    m_CornerAnnotation->SetMaximumFontSize( 12 );
-    m_CornerAnnotation->GetTextProperty()->SetColor( 1,0,0);
+    m_CornerAnnotation = vtkSmartPointer<vtkCornerAnnotation>::New();
+    m_CornerAnnotation->SetLinearFontScaleFactor(2);
+    m_CornerAnnotation->SetNonlinearFontScaleFactor(1);
+    m_CornerAnnotation->SetMaximumFontSize(12);
+    m_CornerAnnotation->GetTextProperty()->SetColor(1, 0, 0);
     m_CornerAnnotation->GetTextProperty()->BoldOn();
-
-    m_Direction = Z;
-
-    m_ImageData = 0;
 
     vtkFileOutputWindow *win = vtkFileOutputWindow::New();
     win->SetFileName("Error.log");
@@ -70,29 +64,20 @@ void CVTKWidget::SetVTKWidget(QVTKOpenGLNativeWidget *pWidget)
     m_MPRRenderInteractor->SetInteractorStyle(m_RenderStyle);
 
     vtkCamera *acamera = m_MPRRenderer->GetActiveCamera();
-
     acamera->SetFocalPoint(0, 0, 5);
     acamera->SetViewUp(0, -1, 0);
 }
 
 void CVTKWidget::MakeMPRImage(double *elements)
 {
-    /** Declarations **/
-    double    icenter[3];
-    int       iDims[3];
-    double    iSpacing[3];
-    double    iOrigin[3];
-    double    iDataRange[2];
-    double    iLevel;
-    double    iWindow;
-    int       iCorrect[3];
-
-    std::stringstream iStream;
-
     /** Retrieve Size and Spacing of the image **/
+    int iDims[3];
     m_ImageData->GetDimensions(iDims);
+    double iSpacing[3];
     m_ImageData->GetSpacing(iSpacing);
+    double iOrigin[3];
     m_ImageData->GetOrigin(iOrigin);
+    double iDataRange[2];
     m_ImageData->GetScalarRange(iDataRange);
 
 #ifdef _TRACE
@@ -101,11 +86,13 @@ void CVTKWidget::MakeMPRImage(double *elements)
     std::cout << m_ImageData->GetOrigin()[0] << " " << m_ImageData->GetOrigin()[1] << " " << m_ImageData->GetOrigin()[2] << std::endl;
 #endif
 
+    std::stringstream iStream;
     iStream << "Dims: " << iDims[0] << "," << iDims[1] << "," << iDims[2] << std::endl;
     iStream << "Spacing: " << iSpacing[0] << "," << iSpacing[1] << "," << iSpacing[2] << std::endl;
     iStream << "Scalar Range: " << iDataRange[0] << "," << iDataRange[1] << std::endl;
 
     /** Get the Center of the 3D Image **/
+    double icenter[3];
     icenter[0] = iSpacing[0] * 0.5 * (iDims[0] - 1);
     icenter[1] = iSpacing[1] * 0.5 * (iDims[1] - 1);
     icenter[2] = iSpacing[2] * 0.5 * (iDims[2] - 1);
@@ -157,7 +144,9 @@ void CVTKWidget::MakeMPRImage(double *elements)
 
     m_ImageReslice->Update();
 
-    iLevel = ( ( iDataRange[1] - ((iDataRange[0]>0.0)?iDataRange[0]:0.0) ) + iDataRange[0] ) / 2.0;
+    double iLevel;
+    double iWindow;
+    iLevel = ((iDataRange[1] - ((iDataRange[0]>0.0)?iDataRange[0]:0.0)) + iDataRange[0]) / 2.0;
     iWindow = iDataRange[1] - iDataRange[0];
 
     /** Setup the Lookup Table based on the Data Range **/
@@ -171,7 +160,7 @@ void CVTKWidget::MakeMPRImage(double *elements)
     m_MPRRenderer->RemoveActor(m_CornerAnnotation);
 
     /** Setup the Colormap **/
-    vtkSmartPointer<vtkImageMapToColors> ImageColors = vtkSmartPointer<vtkImageMapToColors>::New();
+    auto ImageColors = vtkSmartPointer<vtkImageMapToColors>::New();
     //ImageColors->SetOutputFormatToLuminance();
     ImageColors->SetLookupTable(m_Lut);
     ImageColors->SetInputConnection(m_ImageReslice->GetOutputPort());
@@ -212,9 +201,10 @@ void CVTKWidget::MakeMPRImage(double *elements)
     m_RenderStyle->AddObserver(vtkCommand::MiddleButtonReleaseEvent, m_EventCallback);
     m_RenderStyle->AddObserver(vtkCommand::KeyPressEvent, m_EventCallback);
 
-    iCorrect[2] = round( (  icenter[2] - fabs(iOrigin[2])  )/iSpacing[2] );
-    iCorrect[1] = round( (  icenter[1] - fabs(iOrigin[1])  )/iSpacing[1] );
-    iCorrect[0] = round( (  icenter[0] - fabs(iOrigin[0])  )/iSpacing[0] );
+    int iCorrect[3];
+    iCorrect[2] = round((icenter[2] - fabs(iOrigin[2]))/iSpacing[2]);
+    iCorrect[1] = round((icenter[1] - fabs(iOrigin[1]))/iSpacing[1]);
+    iCorrect[0] = round((icenter[0] - fabs(iOrigin[0]))/iSpacing[0]);
 
 #ifdef _DEBUG
     std::cout << "Center is " << icenter[0] << " " << icenter[1] <<  " " << icenter[2] << std::endl;
@@ -247,7 +237,7 @@ void CVTKWidget::MakeMPRImage(double *elements)
     and A -> P goes from top to bottom **/
 void CVTKWidget::ResetCamera()
 {
-    vtkCamera *aCamera = m_MPRRenderer->GetActiveCamera();
+    auto *aCamera = m_MPRRenderer->GetActiveCamera();
     /**Init**/
     //aCamera->SetViewUp(0,-1,0);
     //aCamera->SetPosition(0,0,1);
@@ -309,7 +299,6 @@ void CVTKWidget::Render()
     }
 
     /** VTK Rendering Calls **/
-	
     m_MPRRenderer->ResetCamera();
     m_MPRRenderer->ResetCameraClippingRange();
     m_MPRRenderInteractor->Render();
@@ -347,21 +336,21 @@ void CVTKWidget::SetOverLay(vtkImageData *cImage)
         return;
     }
 
-    vtkSmartPointer<vtkImageData> cImageData = vtkSmartPointer<vtkImageData>::Take(cImage);
+    auto cImageData = vtkSmartPointer<vtkImageData>::Take(cImage);
 
     /** Testing **/
-    vtkSmartPointer<vtkWindowLevelLookupTable> cLut = vtkSmartPointer<vtkWindowLevelLookupTable>::New();
+    auto cLut = vtkSmartPointer<vtkWindowLevelLookupTable>::New();
     cLut->DeepCopy(m_Lut);
     cLut->SetAlpha(0.5);
     cLut->Build();
 
     /** Setup the Colormap **/
-    vtkSmartPointer<vtkImageMapToColors> ImageColors = vtkSmartPointer<vtkImageMapToColors>::New();
+    auto ImageColors = vtkSmartPointer<vtkImageMapToColors>::New();
     ImageColors->SetLookupTable(cLut);
     ImageColors->SetInputConnection(m_ImageReslice->GetOutputPort());
 
     /** Generate a Reslice **/
-    vtkSmartPointer<vtkImageReslice> cReslice = vtkSmartPointer<vtkImageReslice>::New();
+    auto cReslice = vtkSmartPointer<vtkImageReslice>::New();
 #if VTK_MAJOR_VERSION <= 5
     cReslice->SetInputConnection(cImageData->GetProducerPort());
 #else
@@ -372,7 +361,7 @@ void CVTKWidget::SetOverLay(vtkImageData *cImage)
     cReslice->SetInterpolationModeToLinear();
 
 	/** Blend the original and secondary Volume as overlay **/
-    vtkSmartPointer<vtkImageBlend> blend = vtkSmartPointer<vtkImageBlend>::New();
+    auto blend = vtkSmartPointer<vtkImageBlend>::New();
 #if VTK_MAJOR_VERSION <= 5
     blend->AddInput(cReslice->GetOutput());
     blend->AddInput(ImageColors->GetOutput());
@@ -408,9 +397,9 @@ void CVTKWidget::SetOverLay(vtkImageData *cImage)
 
 void CVTKWidget::MakePointSphere(double X, double Y, double Z, int radius)
 {
-    vtkSmartPointer<vtkSphereSource> sphereSource = vtkSmartPointer<vtkSphereSource>::New();
-    vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    vtkSmartPointer<vtkActor> sphereActor = vtkSmartPointer<vtkActor>::New();
+    auto sphereSource = vtkSmartPointer<vtkSphereSource>::New();
+    auto mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+    auto sphereActor = vtkSmartPointer<vtkActor>::New();
 
     sphereSource->SetCenter(X,Y,Z);
     sphereSource->SetRadius(radius);
@@ -424,52 +413,43 @@ void CVTKWidget::MakePointSphere(double X, double Y, double Z, int radius)
 
 double* CVTKWidget::GetPixelValueAtLocation(double pX, double pY, double pZ, vtkImageData *cImageData, vtkImageData *cImageSlaveData, bool Interpolate)
 {
-    vtkPointData			*cPointData;
-    vtkPointData			*cImagePointData;
-    vtkPointData            *cSlavePointData;
-    int						 subId;
-    double					 pcoords[3], weights[8];
-    double					 pos[3];
-
-    cPointData = vtkPointData::New();
-    cImagePointData = cImageData->GetPointData();
-
-    cPointData->InterpolateAllocate( cImagePointData, 1, 1 );
+    auto cPointData = vtkSmartPointer<vtkPointData>::New();
+    auto* cImagePointData = cImageData->GetPointData();
+    cPointData->InterpolateAllocate(cImagePointData, 1, 1);
 
     // Use tolerance as a function of size of source data
-    double tol2 = cImageData->GetLength();
+    auto tol2 = cImageData->GetLength();
     tol2 = tol2 ? tol2*tol2 / 1000.0 : 0.001;
 
     // Find the cell that contains pos
-    pos[0] = pX;pos[1] = pY;pos[2] = pZ;
+    double pos[3] = {pX, pY, pZ};
 
     if (Interpolate)
     {
+        int subId;
+        double pcoords[3], weights[8];
+        const auto* cell = cImageData->FindAndGetCell(pos, nullptr, -1, tol2, subId, pcoords, weights);
 
-        vtkCell* cell = cImageData->FindAndGetCell(pos, nullptr, -1, tol2, subId, pcoords, weights );
-
-        if( cell )
+        if(cell)
         {
             // Interpolate the point data
-            cPointData->InterpolatePoint( cImagePointData, 0, cell->PointIds, weights );
-            int components = cPointData->GetScalars()->GetNumberOfComponents();
-            double* tuple = cPointData->GetScalars()->GetTuple( 0 );
+            cPointData->InterpolatePoint(cImagePointData, 0, cell->PointIds, weights);
+            auto components = cPointData->GetScalars()->GetNumberOfComponents();
+            auto* tuple = cPointData->GetScalars()->GetTuple(0);
 
-            int nIDs = cell->PointIds->GetNumberOfIds();
+            auto nIDs = cell->PointIds->GetNumberOfIds();
             std::cout << "Reference Data Interpolate Values " << std::endl;
             for (int k = 0 ; k < 8 ; k++)
-                    std::cout << weights[k] <<  " " ;
+                std::cout << weights[k] <<  " " ;
             std::cout << std::endl;
             if (cImageSlaveData)
             {
-                cSlavePointData = cImageSlaveData->GetPointData();
+                auto* cSlavePointData = cImageSlaveData->GetPointData();
                 for (int k = 0 ; k < nIDs ; k++)
                 {
-                    double *iValue1 = cImagePointData->GetScalars()->GetTuple(cell->PointIds->GetId(k));
-                    double *iValue2 = cSlavePointData->GetScalars()->GetTuple(cell->PointIds->GetId(k));
-                    std::cout << cell->PointIds->GetId(k) << " " << iValue1[0] << 
-                                                                                                    " " << iValue2[0] << 
-                                                                                                    " " << fabs(iValue1[0] - iValue2[0]) << std::endl;
+                    auto* iValue1 = cImagePointData->GetScalars()->GetTuple(cell->PointIds->GetId(k));
+                    auto* iValue2 = cSlavePointData->GetScalars()->GetTuple(cell->PointIds->GetId(k));
+                    std::cout << cell->PointIds->GetId(k) << " " << iValue1[0] << " " << iValue2[0] << " " << fabs(iValue1[0] - iValue2[0]) << std::endl;
                 }
             }
             else
@@ -481,15 +461,13 @@ double* CVTKWidget::GetPixelValueAtLocation(double pX, double pY, double pZ, vtk
     }
     else
     {
-        int cId = cImageData->FindPoint(pos);
+        const auto cId = cImageData->FindPoint(pos);
         if (cImageSlaveData)
         {
-            cSlavePointData = cImageSlaveData->GetPointData();
-            double *iValue1 = cImagePointData->GetScalars()->GetTuple(cId);
-            double *iValue2 = cSlavePointData->GetScalars()->GetTuple(cId);
-            std::cout << cId <<  " " << iValue1[0] << 
-                                                     " " << iValue2[0] << 
-                                                     " " << fabs(iValue1[0] - iValue2[0]) << std::endl;
+            auto* cSlavePointData = cImageSlaveData->GetPointData();
+            const auto* iValue1 = cImagePointData->GetScalars()->GetTuple(cId);
+            const auto* iValue2 = cSlavePointData->GetScalars()->GetTuple(cId);
+            std::cout << cId <<  " " << iValue1[0] << " " << iValue2[0] << " " << fabs(iValue1[0] - iValue2[0]) << std::endl;
         }
         else
             std::cout << cId << " " << cImagePointData->GetScalars()->GetTuple(cId)[0] << std::endl;
@@ -522,11 +500,6 @@ vtkImageInteractionCallback::vtkImageInteractionCallback()
     this->m_ImageTraceData = 0;
 }
 
-vtkImageInteractionCallback::~vtkImageInteractionCallback()
-{
-    // All Pointers are owned by VTKCall. No Deletes are needed.
-}
-
 void vtkImageInteractionCallback::Execute(vtkObject *cObject, unsigned long cEvent, void *cData)
 {
     /** Declarations **/
@@ -542,11 +515,11 @@ void vtkImageInteractionCallback::Execute(vtkObject *cObject, unsigned long cEve
     int              iSize[2];
 
     /** Initializations **/
-    vtkRenderWindowInteractor *cInteractor = this->GetIneteractor();
+    auto* cInteractor = this->GetInteractor();
     cInteractor->GetLastEventPosition(iLastPos);
     cInteractor->GetEventPosition(iCurPos);
 	cInteractor->GetSize(iSize);
-    double           fPoint[4] = {0.0, 0.0, 0.0, 1.0};
+    double fPoint[4] = {0.0, 0.0, 0.0, 1.0};
 
     /** Switch on the different events **/
     switch (cEvent)
@@ -583,8 +556,6 @@ void vtkImageInteractionCallback::Execute(vtkObject *cObject, unsigned long cEve
 #if VTK_MAJOR_VERSION <= 5
                 cReslice->GetOutput()->UpdateInformation();
 #endif
-
-
                 /** Update Window and Level based on mouse movement **/
                 iDeltaX = (iCurPos[0] - iLastPos[0]) * 4.0 / iSize[0];
                 iDeltaY = (iLastPos[1] - iCurPos[1]) * 4.0 / iSize[1];
@@ -606,7 +577,6 @@ void vtkImageInteractionCallback::Execute(vtkObject *cObject, unsigned long cEve
                 {
                     iDeltaY = iDeltaY * ( this->m_LevelValue < 0 ? -0.01 : 0.01 );
                 }
-
 
                 if ( this->m_WindowValue < 0.0 )
                 {
@@ -665,7 +635,6 @@ void vtkImageInteractionCallback::Execute(vtkObject *cObject, unsigned long cEve
 
                 /** Update Slice to Visualize **/
                 cMatrix->MultiplyPoint(fPoint,fCenter);
-
                 cMatrix->SetElement(0, 3, fCenter[0]);
                 cMatrix->SetElement(1, 3, fCenter[1]);
                 cMatrix->SetElement(2, 3, fCenter[2]);
@@ -696,8 +665,6 @@ void vtkImageInteractionCallback::Execute(vtkObject *cObject, unsigned long cEve
 #if VTK_MAJOR_VERSION > 5                                
                 UpdateImageActor(cReslice);
 #endif
-                                
-
                 /** Render **/
                 m_Interactor->Render();
 
@@ -813,19 +780,19 @@ void vtkImageInteractionCallback::Execute(vtkObject *cObject, unsigned long cEve
 
 void vtkImageInteractionCallback::MakeStencilOutput(vtkImageData *cImageData)
 {
-    vtkSmartPointer<vtkPolyData> path = vtkSmartPointer<vtkPolyData>::New();
+    auto path = vtkSmartPointer<vtkPolyData>::New();
  
     if(!m_ImageTracer->IsClosed())
     {
         std::cout << "Path not closed!" << std::endl;
-        m_ImageTraceData = 0;
+        m_ImageTraceData = nullptr;
         return;
     }
  
     m_ImageTracer->GetPath(path);
     std::cout << "There are " << path->GetNumberOfPoints() << " points in the path." << std::endl;
 
-    vtkSmartPointer<vtkPolyDataToImageStencil> polyDataToImageStencil = vtkSmartPointer<vtkPolyDataToImageStencil>::New();
+    auto polyDataToImageStencil = vtkSmartPointer<vtkPolyDataToImageStencil>::New();
     polyDataToImageStencil->SetTolerance(0);
 #if VTK_MAJOR_VERSION <= 5
     polyDataToImageStencil->SetInputConnection(path->GetProducerPort());
@@ -837,12 +804,12 @@ void vtkImageInteractionCallback::MakeStencilOutput(vtkImageData *cImageData)
     polyDataToImageStencil->SetOutputWholeExtent(cImageData->GetExtent());
     polyDataToImageStencil->Update();
 
-    vtkImageStencilToImage *imageStencilToImage = vtkImageStencilToImage::New();
+    auto imageStencilToImage = vtkSmartPointer<vtkImageStencilToImage>::New();
     imageStencilToImage->SetInputConnection(polyDataToImageStencil->GetOutputPort());
     imageStencilToImage->SetInsideValue(255);
     imageStencilToImage->Update();
 
-    vtkSmartPointer<vtkImageCast> castFilter = vtkSmartPointer<vtkImageCast>::New();
+    auto castFilter = vtkSmartPointer<vtkImageCast>::New();
     castFilter->SetInputConnection(imageStencilToImage->GetOutputPort());
     castFilter->SetOutputScalarTypeToShort();
     castFilter->Update();
@@ -858,7 +825,7 @@ void vtkImageInteractionCallback::MakeStencilOutput(vtkImageData *cImageData)
     m_ImageTraceData->DeepCopy(castFilter->GetOutput());
 }
 
-vtkImageData * vtkImageInteractionCallback::GetTraceData()
+vtkImageData* vtkImageInteractionCallback::GetTraceData()
 {
     MakeStencilOutput(m_ImageReslice->GetOutput());
     return m_ImageTraceData;
@@ -867,7 +834,7 @@ vtkImageData * vtkImageInteractionCallback::GetTraceData()
 #if VTK_MAJOR_VERSION > 5
 void vtkImageInteractionCallback::UpdateImageActor(vtkImageReslice* cReslice)
 {
-    vtkSmartPointer<vtkImageMapToColors> ImageColors = vtkSmartPointer<vtkImageMapToColors>::New();
+    auto ImageColors = vtkSmartPointer<vtkImageMapToColors>::New();
     ImageColors->SetLookupTable(m_LutTable);
     ImageColors->SetInputConnection(cReslice->GetOutputPort());
     ImageColors->Update();
