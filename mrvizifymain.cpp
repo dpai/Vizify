@@ -24,9 +24,9 @@
 #include <QStandardItem>
 
 MrVizifyMain::MrVizifyMain(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MrVizifyMain),
-	m_viewLoaded(false)
+QMainWindow(parent),
+ui(new Ui::MrVizifyMain),
+m_viewLoaded(false)
 {
     ui->setupUi(this);
 
