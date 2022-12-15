@@ -45,7 +45,7 @@ class CVTKWidget final : public QVTKOpenGLNativeWidget
 {
     Q_OBJECT
 private:
-    explicit CVTKWidget(QWidget *parent = 0);
+    explicit CVTKWidget(QWidget *parent = nullptr);
 
     enum {
         X = 0, Y = 1, Z = 2
@@ -86,19 +86,11 @@ public:
 
     void SetInput(const vtkSmartPointer<vtkImageData>& cImage);
 
-    void SetOverLay(vtkImageData *);
+    void SetOverLay(const vtkSmartPointer<vtkImageData>& cImage);
 
     void CleanPipeline();
 
     void SetXYImageOrientation(double *dir);
-
-    vtkImageInteractionCallback * GetCallBack() {
-    return m_EventCallback;
-    }
-
-    vtkImageReslice * GetReslice() {
-    return m_ImageReslice;
-    }
 
     static double* GetPixelValueAtLocation(double, double, double, vtkImageData *Master, vtkImageData *Slave, bool);
 
