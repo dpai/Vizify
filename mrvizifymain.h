@@ -46,19 +46,19 @@ private:
     Ui::MrVizifyMain			            *ui;
     std::unique_ptr<CITK>				     m_itk;
     CVTKWidget					            *m_vtkwidget;
-	std::unique_ptr<CMrVizThreshold>         m_ThresholdWidget;
-	bool						             m_viewLoaded;
-	std::stack<QPushButton*>	             m_ModuleBtns;
-	std::map<unsigned short int, QWidget*>   m_Modules;
+    std::unique_ptr<CMrVizThreshold>         m_ThresholdWidget;
+    bool						             m_viewLoaded;
+    std::stack<QPushButton*>	             m_ModuleBtns;
+    std::map<unsigned short int, QWidget*>   m_Modules;
 
 private:
-	void LinkInputModels(QAbstractItemModel *);
+    void LinkInputModels(QAbstractItemModel *);
 
-	void SetupModuleButtons();
+    void SetupModuleButtons();
 
-	bool RegisterModule(QWidget *);
+    bool RegisterModule(QWidget *);
 
-	void Display();
+    void Display();
 
 };
 
