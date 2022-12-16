@@ -23,17 +23,18 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 
+MrVizifyMain::~MrVizifyMain() = default;
+
 MrVizifyMain::MrVizifyMain(QWidget *parent) :
 QMainWindow(parent),
-ui(new Ui::MrVizifyMain),
+ui(std::make_unique<Ui::MrVizifyMain>()),
 m_viewLoaded(false)
 {
     ui->setupUi(this);
 
     // Composition Initializations
     m_itk = std::unique_ptr<CITK>(CITK::CreateNew());
-    m_vtkwidget = CVTKWidget::CreateNew();
-
+    m_vtkwidget = std::unique_ptr<CVTKWidget>(CVTKWidget::CreateNew());
     m_vtkwidget->SetVTKWidget(ui->wGet_ViewWindow);
 
     LinkInputModels(ui->cBox_Volumes->model());
@@ -61,12 +62,6 @@ m_viewLoaded(false)
         std::cout << "Module Not Loaded" << std::endl;
     }
 #endif
-}
-
-MrVizifyMain::~MrVizifyMain()
-{
-    delete ui;
-    delete m_vtkwidget;
 }
 
 void MrVizifyMain::LinkInputModels(QAbstractItemModel *model)
@@ -101,7 +96,7 @@ bool MrVizifyMain::RegisterModule(QWidget *lWidget)
         return false;
     }
 
-    QPushButton *pBtn = m_ModuleBtns.top();
+    auto* const pBtn = m_ModuleBtns.top();
     pBtn->setText(lWidget->objectName());
     m_ModuleBtns.pop();
     m_Modules[pBtn->property("Module").toInt()] = lWidget;
@@ -112,7 +107,7 @@ bool MrVizifyMain::RegisterModule(QWidget *lWidget)
 
 void MrVizifyMain::Display()
 {
-    m_vtkwidget->SetInput( m_itk->GetVTKData<InputImageType>(m_itk->GetImage(ui->cBox_Volumes->currentText()) ) );
+    m_vtkwidget->SetInput(m_itk->GetVTKData<InputImageType>(m_itk->GetImage(ui->cBox_Volumes->currentText())));
     m_vtkwidget->SetXYImageOrientation(m_itk->GetXYImageOrientation());
     m_vtkwidget->Render();
 }
