@@ -36,20 +36,20 @@ private:
         VOLDATA = 8 
     };
 
-    std::unique_ptr<CDicom>                   m_DICOM;
-    std::unique_ptr<CFileLoader>              m_FileLoader;
-    QString                                   m_ImagePath;
-    InputImageType::Pointer                   m_Input3DImage;
-    InputImage4DType::Pointer                 m_Input4DImage;
-    QStandardItemModel                       *m_ImageListModel;
-    static CITK                              *m_CITKinstance;
-    QHash<QString, InputImageType::Pointer>   m_ImageListMap;
-    QString                                   m_ImageName;
-    std::map<std::string, std::string>        m_Input3DImageParam;
-    double									  m_XYImageOrientation[2];
-    DataClass								  m_DataLoadState;
-    unsigned int                              m_4thDimension;
-    unsigned int						      m_VolumeSequenceID;
+    std::unique_ptr<CDicom> m_DICOM;
+    std::unique_ptr<CFileLoader> m_FileLoader;
+    QString m_ImagePath;
+    InputImageType::Pointer m_Input3DImage;
+    InputImage4DType::Pointer m_Input4DImage;
+    QStandardItemModel *m_ImageListModel;
+    static CITK *m_CITKinstance;
+    QHash<QString, InputImageType::Pointer> m_ImageListMap;
+    QString m_ImageName;
+    std::map<std::string, std::string> m_Input3DImageParam;
+    double m_XYImageOrientation[2];
+    DataClass m_DataLoadState;
+    unsigned int m_4thDimension;
+    unsigned int m_VolumeSequenceID;
 
 /** Constructors and Destructors **/
 private:
