@@ -1,5 +1,4 @@
-#ifndef MRVIZIFYMAIN_H
-#define MRVIZIFYMAIN_H
+#pragma once
 
 /** C++ Includes **/
 #include <memory>
@@ -9,7 +8,6 @@
 #include <QMainWindow>
 #include <QAbstractItemModel>
 #include <QPushButton>
-
 
 class CITK;
 class CVTKWidget;
@@ -43,13 +41,13 @@ private slots:
     void on_pushButton_4_clicked();
 
 private:
-    Ui::MrVizifyMain			            *ui;
-    std::unique_ptr<CITK>				     m_itk;
-    CVTKWidget					            *m_vtkwidget;
-    std::unique_ptr<CMrVizThreshold>         m_ThresholdWidget;
-    bool						             m_viewLoaded;
-    std::stack<QPushButton*>	             m_ModuleBtns;
-    std::map<unsigned short int, QWidget*>   m_Modules;
+    std::unique_ptr<Ui::MrVizifyMain> ui;
+    std::unique_ptr<CITK> m_itk;
+    std::unique_ptr<CVTKWidget> m_vtkwidget;
+    std::unique_ptr<CMrVizThreshold> m_ThresholdWidget;
+    std::stack<QPushButton*> m_ModuleBtns;
+    std::map<unsigned short int, QWidget*> m_Modules;
+    bool m_viewLoaded;
 
 private:
     void LinkInputModels(QAbstractItemModel *);
@@ -61,5 +59,3 @@ private:
     void Display();
 
 };
-
-#endif // MRVIZIFYMAIN_H
