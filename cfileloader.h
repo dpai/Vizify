@@ -11,22 +11,19 @@
 #include <itkMetaDataObject.h>
 #include <itkExtractImageFilter.h>
 
-
-using namespace std;
-
 class CFileLoader
 {
 
 /** Data **/
 private:
-    string									m_FileName;
-    string									m_FileDir;
-    InputImageType::Pointer					m_FileImage3D;
-    InputImage4DType::Pointer               m_FileImage4D;
-    InternalPixelDataType			        m_InternalPixelType;
-    double									m_XYSliceOrientation[2];
-    bool									m_FileLoaded;
-    bool									m_RescaleData;
+    std::string m_FileName;
+    std::string m_FileDir;
+    InputImageType::Pointer m_FileImage3D;
+    InputImage4DType::Pointer m_FileImage4D;
+    InternalPixelDataType m_InternalPixelType;
+    double m_XYSliceOrientation[2];
+    bool m_FileLoaded;
+    bool m_RescaleData;
 
 /** Constructors and Destructors **/
 private:
@@ -39,21 +36,24 @@ public:
 
 /** Function Members **/
 public:
-    static CFileLoader* CreateNew() {
+    static CFileLoader* CreateNew() 
+    {
         return new CFileLoader();
     }
 
-    bool isFileLoaded() const noexcept {
+    bool isFileLoaded() const noexcept 
+    {
         return m_FileLoaded;
     }
 
     InputImageType::Pointer GetImage3D(unsigned int);
 
-    InputImage4DType::Pointer GetImage4D() {
+    const InputImage4DType::Pointer& GetImage4D() const noexcept
+    {
         return m_FileImage4D;
     }
 
-    void OpenFile(std::string);
+    void OpenFile(const std::string&);
 
     void Clean();
 
@@ -61,17 +61,19 @@ public:
 
     void GetImageXYOrientation(double *dir) const;
 
-    inline void RescaleDataOn() {
+    inline void RescaleDataOn() noexcept
+    {
         m_RescaleData = true;
     }
 
-    inline void RescaleDataOff() {
+    inline void RescaleDataOff() noexcept
+    {
         m_RescaleData = false;
     }
 
 private:
 
-    bool CanITKRead(std::string);
+    bool CanITKRead(const std::string&);
 
     InputImage4DType::Pointer ReadImage(const char *, InternalPixelDataType);
 

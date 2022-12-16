@@ -71,7 +71,7 @@ void CITK::Init()
 void CITK::LoadDicom()
 {
     /** Ask for the folder **/
-    QFileDialog                 DDialog;
+    QFileDialog DDialog;
 
     DDialog.setFileMode(QFileDialog::Directory);
     DDialog.setOption(QFileDialog::ShowDirsOnly);
@@ -116,7 +116,7 @@ void CITK::LoadDicom()
 void CITK::LoadData()
 {
     /** Ask for the file **/
-    QFileDialog                 FDialog;
+    QFileDialog FDialog;
 
     auto result = FDialog.exec();
 
@@ -318,4 +318,3 @@ vtkSmartPointer<vtkImageData> CITK::GetVTKData(typename T::Pointer const& cImage
 
     return cVTKData;
 }
-
