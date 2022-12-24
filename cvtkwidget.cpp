@@ -321,6 +321,8 @@ void CVTKWidget::CleanPipeline()
     /** Cleanup all actors - Convenience  Function **/
     m_MPRRenderer->RemoveAllViewProps();
     m_MPRRenderInteractor->Render();
+    m_RenderStyle->RemoveAllObservers();
+    m_EventCallback = nullptr;
     m_ImageData = nullptr;
     m_ImageActor = nullptr;
     m_ImageReslice = nullptr;
