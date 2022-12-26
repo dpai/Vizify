@@ -49,4 +49,4 @@ jobs:
       - name: Build project
         shell: bash
         run: |
-          cmake --build build --config ${{ matrix.config.build_type }}
+          cmake --build build/"${{ matrix.config.build_type }}" --config ${{ matrix.config.build_type }} --target all
