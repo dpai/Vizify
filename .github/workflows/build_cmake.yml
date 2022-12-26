@@ -14,7 +14,7 @@ jobs:
             os: ubuntu-20.04
             build_type: Debug
             packages: ninja-build
-            generator: Unix Makefiles
+            generator: Ninja
             cc: gcc
             cxx: g++
 
