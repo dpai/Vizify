@@ -40,7 +40,7 @@ jobs:
           sudo apt update
           sudo apt install ${{ matrix.config.packages }}
           scp -r ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PATH }}/ubuntu/${{ matrix.config.build_type }}/a ~/
-          cat a
+          cat ~/a
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
