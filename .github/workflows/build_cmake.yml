@@ -17,6 +17,7 @@ jobs:
         config:
           - name: "Ubuntu 20.04 GCC 9.3"
             os: ubuntu-20.04
+            id: ubuntu
             build_type: Debug
             packages: ninja-build
             generator: Ninja
@@ -56,6 +57,7 @@ jobs:
         run: |
           export CC=${{ matrix.config.cc }}
           export CXX=${{ matrix.config.cxx }}
+          export OS=${{ matrix.config.id }}
           ninja --version
           cmake --version
           mkdir build
