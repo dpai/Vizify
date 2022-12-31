@@ -15,6 +15,8 @@ configure_file (
 
 add_subdirectory(dependencies)
 
+message("Prefix Path " ${CMAKE_PREFIX_PATH} )
+
 find_package(ITK REQUIRED)
 message("This variale is "  ${ITK_USE_FILE})
 include(${ITK_USE_FILE})
