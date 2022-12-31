@@ -19,7 +19,7 @@ jobs:
             os: ubuntu-20.04
             id: ubuntu
             build_type: Debug
-            packages: ninja-build
+            packages: ninja-build libglu1-mesa-dev mesa-common-dev
             generator: Ninja
             cc: gcc
             cxx: g++
