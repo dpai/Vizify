@@ -19,7 +19,7 @@ jobs:
             os: ubuntu-20.04
             id: ubuntu
             build_type: Debug
-            packages: ninja-build libglu1-mesa-dev mesa-common-dev
+            packages: ninja-build libglu1-mesa-dev mesa-common-dev libdouble-conversion3
             generator: Ninja
             cc: gcc
             cxx: g++
