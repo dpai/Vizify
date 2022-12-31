@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
  
 project(MrVizify)
 
@@ -13,7 +13,8 @@ configure_file (
   "${PROJECT_BINARY_DIR}/MrVizifyConfig.h"
   )
 
- 
+add_subdirectory(dependencies)
+
 find_package(ITK REQUIRED)
 message("This variale is "  ${ITK_USE_FILE})
 include(${ITK_USE_FILE})
@@ -30,14 +31,12 @@ set (QT_LIB_VERSION "5" CACHE PATH "Specify Qt version")
 
 if (QT_LIB_VERSION VERSION_GREATER "4")
   find_package(Qt5 REQUIRED COMPONENTS Core)
-  include_directories(${Qt_INCLUDE_DIRS})
-  include_directories(${Qt5Core_INCLUDE_DIRS})
 else()
   find_package(Qt4 REQUIRED)
   include(${QT_USE_FILE})
 endif()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 ### Include ITK Wrapped DCMTK DICOM
 option (USE_ITKDCMTK "Add ITK Wrapped DCMTK to the project ")
@@ -124,6 +123,7 @@ set(SOURCE_FILES
     main.cpp)
 
 add_executable(MrVizify MACOSX_BUNDLE ${SOURCE_FILES} ${HEADER_FILES} ${UISrcs} ${MOCSrcs} ${QT_WRAP})
+target_include_directories(MrVizify PRIVATE ${CMAKE_SOURCE_DIR})
 
 if("${ITK_VERSION_MAJOR}" LESS 4)
   target_link_libraries(MrVizify ITKReview ${ITK_LIBRARIES} ${VTK_LIBRARIES})

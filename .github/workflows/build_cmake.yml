@@ -2,6 +2,11 @@ name: CMake Build Matrix
 
 on: [ push, pull_request ]
 
+env:
+  SSH_USER: ${{ secrets.SSH_USER }}
+  SSH_HOST: ${{ secrets.SSH_HOST }}
+  SSH_PATH: ${{ secrets.SSH_PATH }}
+
 jobs:
   build:
     name: ${{ matrix.config.name }}
@@ -39,8 +44,6 @@ jobs:
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
           sudo apt update
           sudo apt install ${{ matrix.config.packages }}
-          scp -r ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PATH }}/ubuntu/${{ matrix.config.build_type }}/a ~/
-          cat ~/a
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
@@ -50,6 +53,7 @@ jobs:
         run: |
           export CC=${{ matrix.config.cc }}
           export CXX=${{ matrix.config.cxx }}
+          export OS=ubuntu
           ninja --version
           cmake --version
           mkdir build
