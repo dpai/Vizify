@@ -44,6 +44,7 @@ jobs:
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
           sudo apt update
           sudo apt install ${{ matrix.config.packages }}
+          export OS=ubuntu
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
@@ -53,7 +54,6 @@ jobs:
         run: |
           export CC=${{ matrix.config.cc }}
           export CXX=${{ matrix.config.cxx }}
-          export OS=ubuntu
           ninja --version
           cmake --version
           mkdir build
