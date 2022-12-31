@@ -40,6 +40,8 @@ jobs:
       - name: Install dependencies on Ubuntu
         if: startsWith(matrix.config.os, 'ubuntu')
         shell: bash
+        env:
+          OS: ubuntu
         run: |
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
           sudo apt update
