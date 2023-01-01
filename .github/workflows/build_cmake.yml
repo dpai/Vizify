@@ -1,0 +1,69 @@
+name: CMake Build Matrix
+
+on: [ push, pull_request ]
+
+env:
+  SSH_USER: ${{ secrets.SSH_USER }}
+  SSH_HOST: ${{ secrets.SSH_HOST }}
+  SSH_PATH: ${{ secrets.SSH_PATH }}
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: "Ubuntu 20.04 GCC 9.3"
+            os: ubuntu-20.04
+            id: ubuntu
+            build_type: Debug
+            packages: ninja-build libglu1-mesa-dev mesa-common-dev libdouble-conversion3
+            generator: Ninja
+            cc: gcc
+            cxx: g++
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: print environment
+        run: |
+          echo github.event.action: ${{ github.event.action }}
+          echo github.event_name: ${{ github.event_name }}
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with: 
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: 'placeholder'
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Install dependencies on Ubuntu
+        if: startsWith(matrix.config.os, 'ubuntu')
+        shell: bash
+        env:
+          OS: ubuntu
+        run: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+          sudo apt update
+          sudo apt install ${{ matrix.config.packages }}
+          export OS=ubuntu
+      - name: Install dependencies on windows
+        if: startsWith(matrix.config.os, 'windows')
+        run: |
+          choco install ${{ matrix.config.packages }}
+      - name: Configure project
+        shell: bash
+        run: |
+          export CC=${{ matrix.config.cc }}
+          export CXX=${{ matrix.config.cxx }}
+          export OS=${{ matrix.config.id }}
+          ninja --version
+          cmake --version
+          mkdir build
+          mkdir install
+          cmake -G "${{ matrix.config.generator }}" -S . -B build/"${{ matrix.config.build_type }}" -DCMAKE_BUILD_TYPE="${{ matrix.config.build_type }}" -DCMAKE_INSTALL_PREFIX:PATH=install
+      - name: Build project
+        shell: bash
+        run: |
+          cmake --build build/"${{ matrix.config.build_type }}" --config ${{ matrix.config.build_type }} --target all
