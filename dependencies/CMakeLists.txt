@@ -1,4 +1,4 @@
-find_package(ITK)
+find_package(ITK QUIET)
 if (NOT ${ITK_FOUND})
   execute_process(COMMAND scp -r $ENV{SSH_USER}@$ENV{SSH_HOST}:$ENV{SSH_PATH}/$ENV{OS}/${CMAKE_BUILD_TYPE}/ITK.tgz .
                   WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
@@ -7,7 +7,7 @@ if (NOT ${ITK_FOUND})
   set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR} PARENT_SCOPE)
 endif()
 
-find_package(VTK)
+find_package(VTK QUIET)
 if (NOT ${VTK_FOUND})
   execute_process(COMMAND scp -r $ENV{SSH_USER}@$ENV{SSH_HOST}:$ENV{SSH_PATH}/$ENV{OS}/${CMAKE_BUILD_TYPE}/VTK.tgz .
                   WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
@@ -16,7 +16,7 @@ if (NOT ${VTK_FOUND})
   set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR} PARENT_SCOPE)
 endif()
 
-find_package(Qt5Core)
+find_package(Qt5Core QUIET)
 if (NOT ${Qt5Core_FOUND})
   execute_process(COMMAND scp -r $ENV{SSH_USER}@$ENV{SSH_HOST}:$ENV{SSH_PATH}/$ENV{OS}/${CMAKE_BUILD_TYPE}/Qt.tgz .
                   WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
