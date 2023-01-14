@@ -1,6 +1,16 @@
 name: CMake Build Matrix
 
-on: [ push, pull_request ]
+on: 
+  push:
+    paths-ignore:
+      - 'README.md'
+      - ITK_Latest.png
+      - 'doc/**'
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - ITK_Latest.png
+      - 'doc/**'
 
 env:
   SSH_USER: ${{ secrets.SSH_USER }}

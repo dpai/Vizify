@@ -15,12 +15,9 @@ configure_file (
 
 add_subdirectory(dependencies)
 
-message("Prefix Path " ${CMAKE_PREFIX_PATH} )
+message("Dependent Library Path " ${CMAKE_PREFIX_PATH} )
 
 find_package(ITK REQUIRED)
-message("This variale is "  ${ITK_USE_FILE})
-include(${ITK_USE_FILE})
-message("ITK Includes " ${ITK_INCLUDE_DIRS})
 if (ITKVtkGlue_LOADED)
   find_package(VTK REQUIRED)
 else()
@@ -46,14 +43,12 @@ option (USE_ITKDCMTK "Add ITK Wrapped DCMTK to the project ")
 option (USE_MERGE "Add Merge Toolkit to the project")
 
 if (USE_ITKDCMTK)
-    include_directories(${PROJECT_SOURCE_DIR}/MrVizDCMTKDICOM)
     add_subdirectory(MrVizDCMTKDICOM)
     set(EXTRA_LIBS ${EXTRA_LIBS} MrVizDCMTKDICOM)
 	set(DICOM_LIB "DCMTK" CACHE STRING "DCMTK Dicom Toolkit")
 endif(USE_ITKDCMTK)
 
 if (USE_MERGE)
-    include_directories(${PROJECT_SOURCE_DIR}/MrVizMERGEDICOM)
     add_subdirectory(MrVizMERGEDICOM)
     set(EXTRA_LIBS ${EXTRA_LIBS} MrVizMERGE)
 	set(DICOM_LIB "MERGE" CACHE STRING "Merge Dicom Toolkit")
@@ -63,7 +58,6 @@ endif(USE_MERGE)
 option (USE_CIMGPROC "Add the Image Processing Routines to the project")
 
 if (USE_CIMGPROC)
-    include_directories(${PROJECT_SOURCE_DIR}/MRImageProcessing)
     add_subdirectory(MRImageProcessing)
     set(EXTRA_LIBS ${EXTRA_LIBS} MrImgProc)
 endif(USE_CIMGPROC)
@@ -72,7 +66,6 @@ endif(USE_CIMGPROC)
 option (USE_CIMGCONV "Add the Image Convertor Routines to the project")
 
 if (USE_CIMGCONV)
-    include_directories(${PROJECT_SOURCE_DIR}/MRImageConvertor)
     add_subdirectory(MRImageConvertor)
     set(EXTRA_LIBS ${EXTRA_LIBS} MrImgConv)
 endif(USE_CIMGCONV)
@@ -81,7 +74,6 @@ endif(USE_CIMGCONV)
 option (USE_CIMGSTAT "Add the Image Statistics Routines to the project")
 
 if (USE_CIMGSTAT)
-    include_directories(${PROJECT_SOURCE_DIR}/MRImageStatistics)
     add_subdirectory(MRImageStatistics)
     set(EXTRA_LIBS ${EXTRA_LIBS} MrImgStats)
 endif(USE_CIMGSTAT)
@@ -125,7 +117,7 @@ set(SOURCE_FILES
     main.cpp)
 
 add_executable(MrVizify MACOSX_BUNDLE ${SOURCE_FILES} ${HEADER_FILES} ${UISrcs} ${MOCSrcs} ${QT_WRAP})
-target_include_directories(MrVizify PRIVATE ${CMAKE_SOURCE_DIR})
+target_include_directories(MrVizify PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 if("${ITK_VERSION_MAJOR}" LESS 4)
   target_link_libraries(MrVizify ITKReview ${ITK_LIBRARIES} ${VTK_LIBRARIES})
