@@ -26,6 +26,8 @@ ITK - tested for 4.11
 
 Qt - works with 4 as well as 5
 
+Update: The current code works with VTK 9 and ITK 5, since the update to Modern C++. I have not tested the older versions on which it was built before, so it may or may not work.
+
 ## Building Qt (Windows).
 
 Download the latest Qt from the online repository. The instructions are for Qt version 5.9.1. It is possible later versions differ in setup.
