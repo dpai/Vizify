@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.8)
  
-project(MrVizify)
+project(MrVizify CXX) 
 
 ## Addin version number
 set(MrVizify_VERSION_MAJOR 1)
@@ -12,6 +12,10 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/MrVizifyConfig.h.in"
   "${PROJECT_BINARY_DIR}/MrVizifyConfig.h"
   )
+
+# Link this 'library' to set the c++ standard / compile-time options requested
+add_library(project_options INTERFACE)
+target_compile_features(project_options INTERFACE cxx_std_17)
 
 add_subdirectory(dependencies)
 
@@ -122,6 +126,7 @@ target_include_directories(MrVizify PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 if("${ITK_VERSION_MAJOR}" LESS 4)
   target_link_libraries(MrVizify ITKReview ${ITK_LIBRARIES} ${VTK_LIBRARIES})
 else("${ITK_VERSION_MAJOR}" LESS 4)
+  target_link_libraries(MrVizify PRIVATE project_options)
   ## ITK Targets
   target_link_libraries(MrVizify PRIVATE ITKVtkGlue) 
   target_link_libraries(MrVizify PRIVATE ITKIOGDCM)

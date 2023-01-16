@@ -4,12 +4,12 @@ on:
   push:
     paths-ignore:
       - 'README.md'
-      - ITK_Latest.png
+      - 'ITK_Latest.png'
       - 'doc/**'
   pull_request:
     paths-ignore:
       - 'README.md'
-      - ITK_Latest.png
+      - 'ITK_Latest.png'
       - 'doc/**'
 
 env:
@@ -51,13 +51,10 @@ jobs:
       - name: Install dependencies on Ubuntu
         if: startsWith(matrix.config.os, 'ubuntu')
         shell: bash
-        env:
-          OS: ubuntu
         run: |
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
           sudo apt update
           sudo apt install ${{ matrix.config.packages }}
-          export OS=ubuntu
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
