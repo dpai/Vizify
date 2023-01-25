@@ -2,7 +2,7 @@
 #include "cthresholdobject.h"
 #include "thresholdobjects.h"
 
-CThresholdObject *CThresholdFactory::CreateThresholdObject(Algorithms type) const
+CThresholdObject *CThresholdFactory::CreateThresholdObject(Algorithms type)
 {
     switch(static_cast<Algorithms>(type))
     {

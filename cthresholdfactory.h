@@ -18,5 +18,5 @@ public:
         return new CThresholdFactory{};
     }
 
-    CThresholdObject *CreateThresholdObject(Algorithms type) const;
+    static CThresholdObject *CreateThresholdObject(Algorithms type);
 };
