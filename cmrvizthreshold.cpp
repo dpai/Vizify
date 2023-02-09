@@ -18,8 +18,6 @@ m_itk(c_itk)
     ui->setupUi(this);
     ui->cBox_InputImg->setModel(model);
 
-    m_ThresholdFactory = std::unique_ptr<CThresholdFactory>(CThresholdFactory::CreateNew());
-
     m_inputvtkwidget = std::unique_ptr<CVTKWidget>(CVTKWidget::CreateNew());
     m_inputvtkwidget->SetVTKWidget(ui->qWidget_InputView);
 
@@ -52,7 +50,7 @@ void CMrVizThreshold::ProcessThreshold()
     m_InputProcessedImageName = ui->cBox_InputImg->currentText();
 
     /** Retrieve the selected Threshold Algorithm **/
-    m_ThresholdObject = std::unique_ptr<CThresholdObject>(m_ThresholdFactory->CreateThresholdObject(static_cast<Algorithms>(ui->cBox_ThreshAlg->itemData(ui->cBox_ThreshAlg->currentIndex()).toInt())));
+    m_ThresholdObject = std::unique_ptr<CThresholdObject>(CThresholdFactory::CreateThresholdObject(static_cast<Algorithms>(ui->cBox_ThreshAlg->itemData(ui->cBox_ThreshAlg->currentIndex()).toInt())));
     /** Set the Input Image **/
     m_ThresholdObject->SetInput(m_itk->GetImage(m_InputProcessedImageName));
 

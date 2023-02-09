@@ -33,7 +33,6 @@ private:
     std::unique_ptr<Ui::CMrVizThreshold> ui;
     std::unique_ptr<CVTKWidget> m_inputvtkwidget;
     std::unique_ptr<CVTKWidget> m_thresholdvtkwidget;
-    std::unique_ptr<CThresholdFactory> m_ThresholdFactory;
     std::unique_ptr<CThresholdObject> m_ThresholdObject;
     CITK *const m_itk;
 
